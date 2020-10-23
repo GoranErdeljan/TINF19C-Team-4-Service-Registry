@@ -2,9 +2,10 @@
   "name": "service-discovery-for-oi4-registry",
   "version": "1.0.0",
   "description": "Discovering Services via DNS-SD und publishing them to the OI4 Message Bus",
-  "main": "index.js",
+  "main": "src.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src.js"
   },
   "author": "",
   "license": "ISC",
