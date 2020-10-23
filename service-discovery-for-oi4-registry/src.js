@@ -1,12 +1,6 @@
-const mdns = require('mdns');
-const discoveralltypes = mdns.browseThemAll();
-discoveralltypes.on('serviceUp', service => {
-    console.log('Service Up:');
-    console.log(service);
-});
-discoveralltypes.on('serviceDown', service => {
-    console.log('Service Down:');
-    console.log(service);
-});
+var mdns = require('multicast-dns')();
+const mqtt = require('mqtt');
 
-discoveralltypes.start();
+mdns.on('query', function(query)  {
+    console.log(query);
+});
