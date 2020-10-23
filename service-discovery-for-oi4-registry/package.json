@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mdns": "^2.5.1"
+    "mdns": "^2.5.1",
+    "mqtt": "^4.2.1"
   }
 }
