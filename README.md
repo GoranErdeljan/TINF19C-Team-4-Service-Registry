@@ -13,4 +13,4 @@ The upcoming Service-Registry is developed with the aim to improve and expand an
 - [Serdar Ilhan]
 - [Benedict Wetzel](https://github.com/wetzelbe)
 
-# About the Project
+## About the Project
