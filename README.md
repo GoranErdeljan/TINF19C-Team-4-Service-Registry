@@ -6,3 +6,4 @@
 ## Contributors
 - [Benedict Wetzel](https://github.com/wetzelbe)
 - [Tim Diehl](https://github.com/timthom5)
+- [Daniel Baumann](https://github.com/DanielErich)
