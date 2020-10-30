@@ -4,4 +4,4 @@
 
 
 ## Contributors
-- Benedict Wetzel 
+- [Benedict Wetzel](https://github.com/wetzelbe)
