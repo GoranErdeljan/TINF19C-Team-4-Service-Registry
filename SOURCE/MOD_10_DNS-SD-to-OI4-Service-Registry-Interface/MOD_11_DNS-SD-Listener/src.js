@@ -19,5 +19,4 @@ mdns.on('query', function(query)  {
     console.log('SRV-Records: ')
     console.log(srv_records);
     console.log();
-    
 });
