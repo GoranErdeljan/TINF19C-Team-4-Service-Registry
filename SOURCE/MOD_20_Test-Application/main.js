@@ -5,9 +5,11 @@ var announceService = require("./MOD_22_Announce_Service_via_DNS-SD/announceServ
 var registeratOI4 = require("./MOD_23_Register-itself-at-the-OI4-Service-Registry/registeratOI4")
 
 webInterface.start()
+dnssdListener.start()
 dnssdListener.addCallback(function(entry) {
     console.log(entry)
     webInterface.addDNS_SDEntry(entry)
 })
 
 announceService.start()
+registeratOI4.start()
