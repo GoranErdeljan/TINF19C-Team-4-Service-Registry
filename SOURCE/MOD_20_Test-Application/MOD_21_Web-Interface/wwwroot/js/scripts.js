@@ -25,19 +25,19 @@ $.get('/DNSSD/Entries', {}, function(data) {
         var tr = document.createElement("tr")
         var td = document.createElement("td")
         srv.forEach(element => {
-            td.appendChild(document.createTextNode(element))
+            td.appendChild(document.createTextNode(element + " "))
         })
         tr.appendChild(td);
 
         td = document.createElement("td")
         a.forEach(element => {
-            td.appendChild(document.createTextNode(element))
+            td.appendChild(document.createTextNode(element + " "))
         })
         tr.appendChild(td);
 
         td = document.createElement("td")
         txt.forEach(element => {
-            td.appendChild(document.createTextNode(element))
+            td.appendChild(document.createTextNode(element + " "))
         })
         tr.appendChild(td);
 
