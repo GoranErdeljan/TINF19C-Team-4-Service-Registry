@@ -20,7 +20,7 @@ module.exports.start = function () {
                     name: 'Service Discovery Test Application',
                     type: 'SRV',
                     data: {
-                        port: 80,
+                        port: 8080,
                         weigth: 0,
                         priority: 10,
                         target: 'localhost'
@@ -29,14 +29,14 @@ module.exports.start = function () {
                     name: '_oi4-servicediscovery._http._tcp.local',
                     type: 'A',
                     ttl: 60,
-                    data: '192.168.1.5'
+                    data: '192.168.0.1'
                 }, {
                     name: '_oi4-servicediscovery._http._tcp.local',
                     type: 'TXT',
                     ttl: 60,
                     data: [
                         // Put TXT Records in here
-                        "port=90"
+                        "port=8080"
                     ]
                 }]
             })

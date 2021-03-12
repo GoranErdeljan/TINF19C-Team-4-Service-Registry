@@ -1,7 +1,5 @@
 var mdns = require('multicast-dns')();
-const mqtt = require('mqtt');
 
-var mqtt_client = mqtt.connect('mqtt://localhost')
 var callbacks = []
 
 mdns.query({
