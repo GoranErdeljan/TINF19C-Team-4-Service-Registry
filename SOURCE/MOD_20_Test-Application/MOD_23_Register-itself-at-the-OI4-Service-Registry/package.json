@@ -1,0 +1,14 @@
+{
+  "name": "mod_23_register-itself-at-the-oi4-service-registry",
+  "version": "1.0.0",
+  "description": "",
+  "main": "registeratOI4.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mqtt": "^4.2.6"
+  }
+}
