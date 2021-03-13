@@ -8,9 +8,9 @@ The upcoming Service-Registry is developed with the aim to improve and expand an
 
 ## Contributors
 - [Daniel Baumann](https://github.com/DanielErich)
-- [Tim Diehl](https://github.com/timthom5)
+- [Tim Diehl](https://github.com/timthom5) † exmatrikuliert
 - [Goran Erdeljan](https://github.com/GoranErdeljan)
 - [Serdar Ilhan](https://github.com/serdarilhan)
-- [Benedict Wetzel](https://github.com/wetzelbe)
+- [Benedict Wetzel](https://github.com/wetzelbe) 
 
 ## About the Project
