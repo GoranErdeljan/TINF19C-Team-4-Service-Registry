@@ -13,6 +13,9 @@ module.exports.start = function() {
     client = mqtt.connect('mqtt://localhost')
     client.on('connect', () => {
         client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
+        setInterval(() => {
+            pubHealth()
+        }, 5000)
     })
     client.on('message', (topic, message) => {
         console.log('Topic: ' + topic + ' Message: ' + message)
@@ -20,10 +23,17 @@ module.exports.start = function() {
     })
 }
 
+function pubHealth()
+{
+    client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/health/' + oi4Identifier, buildmsg({
+
+    }))
+}
+
 function buildmamMessage() {
     var mam = {
         DataSetWriterId: oi4Identifier,
-        Timestamp: new Date().getTime(),
+        Timestamp: new Date().toUTCString(),
         Status: 0,
         Payload: { 
             Manufacturer: { 
