@@ -12,6 +12,10 @@ module.exports.start = function() {
     // Send mam to: 'oi4/Aggregation/<appId>/pub/mam/<oi4Identifier>'
     client = mqtt.connect('mqtt://localhost')
     client.on('connect', () => {
+        client.subscribe('oi4/#', (err) => {
+            if (err)
+                console.log(err)
+        })
         client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
         setInterval(() => {
             pubHealth()
