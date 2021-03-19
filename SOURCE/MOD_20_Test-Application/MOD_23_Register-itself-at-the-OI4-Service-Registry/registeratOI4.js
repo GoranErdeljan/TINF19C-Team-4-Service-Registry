@@ -24,28 +24,28 @@ function buildmamMessage() {
     var mam = {
         DataSetWriterId: oi4Identifier,
         Timestamp: new Date().getTime(),
+        Status: 0,
         Payload: { 
             Manufacturer: { 
                 Locale: "de-de",
                 Text: "TINF19C-Team4" 
             }, 
-            ManufacturerUri: "",
+            ManufacturerUri: "urn:undefined.com",
             Model: { 
                 Locale: "de-de", 
-                Text: Productcode 
+                Text: Model 
             },
-            ProductCode: "",
+            ProductCode: Productcode,
             HardwareRevision: "",
-            SoftwareRevision: "",
+            SoftwareRevision: "0.0",
             DeviceRevision: "", 
-            DeviceManual: "",
-            DeviceClass: "",
-            SerialNumber: "",
+            DeviceManual: "Not available",
+            DeviceClass: "Aggregation",
             ProductInstanceUri: oi4Identifier,
             RevisionCounter: '1',
             Description: { 
-                Locale: "<localeId>",
-                Text: "<String>" 
+                Locale: "de-de",
+                Text: Model 
             } 
         }
     }
@@ -54,12 +54,12 @@ function buildmamMessage() {
 
 function buildmsg(messages) {
     var msgWrapper = {
-        MessageId: Date.now().toString(),
+        MessageId: Date.now().toString() + '-Aggregation/' + oi4Identifier,
         MessageType: 'ua-data',
         PublisherId: 'Aggregation/' + oi4Identifier,
         DataSetClassId: '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58',
-        CorrelationId: 'empty',
+        CorrelationId: '',
         Messages: messages
     }
     return JSON.stringify(msgWrapper)
-}
+}   
