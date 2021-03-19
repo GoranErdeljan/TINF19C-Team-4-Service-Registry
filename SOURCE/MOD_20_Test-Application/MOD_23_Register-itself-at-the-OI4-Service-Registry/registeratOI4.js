@@ -32,7 +32,7 @@ function buildmamMessage() {
             ManufacturerUri: "",
             Model: { 
                 Locale: "de-de", 
-                Text: "<String>" 
+                Text: Productcode 
             },
             ProductCode: "",
             HardwareRevision: "",
@@ -42,7 +42,7 @@ function buildmamMessage() {
             DeviceClass: "",
             SerialNumber: "",
             ProductInstanceUri: oi4Identifier,
-            RevisionCounter: '<INT32>',
+            RevisionCounter: '1',
             Description: { 
                 Locale: "<localeId>",
                 Text: "<String>" 
