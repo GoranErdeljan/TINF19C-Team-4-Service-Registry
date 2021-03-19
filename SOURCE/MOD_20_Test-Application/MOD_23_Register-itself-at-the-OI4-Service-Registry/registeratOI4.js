@@ -27,7 +27,7 @@ function pubHealth()
 {
     client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/health/' + oi4Identifier, buildmsg([{
         DataSetWriterId: oi4Identifier,
-        Timestamp: new Date().toUTCString(),
+        Timestamp: new Date().toISOString(),
         Status: 0,
         Payload: {
             health: 'NORMAL_0',
