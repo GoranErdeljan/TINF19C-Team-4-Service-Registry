@@ -5,7 +5,7 @@ var client
 const SerialNumber = 'undefined'
 const Model = 'DNS_SD_Test_Application'
 const Productcode = 'DNS_SD_TEST'
-const oi4Identifier = 'urn:undefined/' + Model + '/' + Productcode + '/' + SerialNumber
+const oi4Identifier = 'urn:undefined.com/' + Model + '/' + Productcode + '/' + SerialNumber
 
 
 module.exports.start = function() {
