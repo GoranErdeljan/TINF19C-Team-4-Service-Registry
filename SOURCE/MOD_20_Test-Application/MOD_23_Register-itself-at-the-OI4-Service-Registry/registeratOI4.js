@@ -12,11 +12,11 @@ module.exports.start = function() {
     // Send mam to: 'oi4/Aggregation/<appId>/pub/mam/<oi4Identifier>'
     client = mqtt.connect('mqtt://localhost')
     client.on('connect', () => {
-        client.publish('oi4/Aggregation/' + oi4Identifier + '/pub/mam' + oi4Identifier, buildmsg(buildmamMessage()))
+        client.publish('oi4/Aggregation/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
     })
     client.on('message', (topic, message) => {
         console.log('Topic: ' + topic + ' Message: ' + message)
-        
+
     })
 }
 
