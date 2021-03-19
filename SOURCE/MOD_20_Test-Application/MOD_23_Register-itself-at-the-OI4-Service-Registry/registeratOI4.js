@@ -15,22 +15,23 @@ module.exports.start = function() {
         client.publish('oi4/Aggregation/' + oi4Identifier + '/pub/mam' + oi4Identifier, buildmsg(buildmamMessage()))
     })
     client.on('message', (topic, message) => {
-
+        console.log('Topic: ' + topic + ' Message: ' + message)
+        
     })
 }
 
 function buildmamMessage() {
     var mam = {
         DataSetWriterId: oi4Identifier,
-        Timestamp: "<DateTime>",
+        Timestamp: new Date().getTime(),
         Payload: { 
             Manufacturer: { 
-                Locale: "<localeId>",
-                Text: "<String>" 
+                Locale: "de-de",
+                Text: "TINF19C-Team4" 
             }, 
             ManufacturerUri: "",
             Model: { 
-                Locale: "<localeId>", 
+                Locale: "de-de", 
                 Text: "<String>" 
             },
             ProductCode: "",
