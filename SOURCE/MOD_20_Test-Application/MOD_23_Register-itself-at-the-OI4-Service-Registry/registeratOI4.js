@@ -46,7 +46,7 @@ function pubHealth()
 function buildmamMessage() {
     var mam = [{
         DataSetWriterId: oi4Identifier,
-        Timestamp: new Date().toUTCString(),
+        Timestamp: new Date().toISOString(),
         Status: 0,
         Payload: { 
             Manufacturer: { 
