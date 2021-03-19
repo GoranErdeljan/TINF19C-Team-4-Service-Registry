@@ -6,13 +6,13 @@ const SerialNumber = 'undefined'
 const Model = 'DNS_SD_Test_Application'
 const Productcode = 'DNS_SD_TEST'
 const oi4Identifier = 'urn:undefined.com/' + Model + '/' + Productcode + '/' + SerialNumber
-
+const DeviceClass = 'Registry'
 
 module.exports.start = function() {
     // Send mam to: 'oi4/Aggregation/<appId>/pub/mam/<oi4Identifier>'
     client = mqtt.connect('mqtt://localhost')
     client.on('connect', () => {
-        client.publish('oi4/Aggregation/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
+        client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
     })
     client.on('message', (topic, message) => {
         console.log('Topic: ' + topic + ' Message: ' + message)
@@ -40,7 +40,7 @@ function buildmamMessage() {
             SoftwareRevision: "0.0",
             DeviceRevision: "", 
             DeviceManual: "Not available",
-            DeviceClass: "Aggregation",
+            DeviceClass: DeviceClass,
             ProductInstanceUri: oi4Identifier,
             RevisionCounter: '1',
             Description: { 
@@ -54,9 +54,9 @@ function buildmamMessage() {
 
 function buildmsg(messages) {
     var msgWrapper = {
-        MessageId: Date.now().toString() + '-Aggregation/' + oi4Identifier,
+        MessageId: Date.now().toString() + '-' + DeviceClass + '/' + oi4Identifier,
         MessageType: 'ua-data',
-        PublisherId: 'Aggregation/' + oi4Identifier,
+        PublisherId: DeviceClass + '/' + oi4Identifier,
         DataSetClassId: '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58',
         CorrelationId: '',
         Messages: messages
