@@ -26,12 +26,13 @@ module.exports.start = function() {
 function pubHealth()
 {
     client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/health/' + oi4Identifier, buildmsg({
-
+        health: 'NORMAL_0',
+        healthState: 100
     }))
 }
 
 function buildmamMessage() {
-    var mam = {
+    var mam = [{
         DataSetWriterId: oi4Identifier,
         Timestamp: new Date().toUTCString(),
         Status: 0,
@@ -58,7 +59,7 @@ function buildmamMessage() {
                 Text: Model 
             } 
         }
-    }
+    }]
     return mam
 }
 
