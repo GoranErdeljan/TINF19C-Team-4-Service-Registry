@@ -12,7 +12,7 @@ module.exports.start = function() {
     // Send mam to: 'oi4/Aggregation/<appId>/pub/mam/<oi4Identifier>'
     client = mqtt.connect('mqtt://localhost')
     client.on('connect', () => {
-        client.subscribe('oi4/#', (err) => {
+        client.subscribe('oi4/'+ DeviceClass + '/' + oi4Identifier + '/#', (err) => {
             if (err)
                 console.log(err)
         })
