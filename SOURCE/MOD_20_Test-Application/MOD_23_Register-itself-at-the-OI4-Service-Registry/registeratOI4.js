@@ -56,9 +56,9 @@ function buildmsg(messages) {
     var msgWrapper = {
         MessageId: Date.now().toString(),
         MessageType: 'ua-data',
-        PublisherId: '<serviceType>/<appId>',
+        PublisherId: 'Aggregation/' + oi4Identifier,
         DataSetClassId: '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58',
-        CorrelationId: '<empty/not present> or <initial MessageId>',
+        CorrelationId: 'empty',
         Messages: messages
     }
     return JSON.stringify(msgWrapper)
