@@ -54,7 +54,7 @@ function buildmamMessage() {
 
 function buildmsg(messages) {
     var msgWrapper = {
-        MessageId: 'unixTimestampInMs-PublisherId',
+        MessageId: Date.now().toString(),
         MessageType: 'ua-data',
         PublisherId: '<serviceType>/<appId>',
         DataSetClassId: '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58',
