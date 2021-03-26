@@ -48,7 +48,7 @@ module.exports.start = function() {
         {
             pubLicense()
         }
-        else if (topic.includes("get") && topic.includes("licenseText"))
+        else if (topic.includes("get") && topic.includes("licenseText") && topic.includes("GNULGPL"))
         {
             pubLicenseText()
         }
@@ -77,7 +77,7 @@ function pubLicense()
         Timestamp: new Date().toISOString(),
         Payload: {
             licenses: [ { 
-                licenseId: "Apache2.0",
+                licenseId: "GNULGPL",
                 components: []
             } ]
         }
@@ -87,7 +87,7 @@ function pubLicense()
 // This function publishes the License Text to the MQTT Broker
 function pubLicenseText()
 {
-    client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/licenseTest/' + oi4Identifier, buildmsg([{
+    client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/licenseTest/GNULGPL', buildmsg([{
         DataSetWriterId: oi4Identifier,
         Timestamp: new Date().toISOString(),
         Payload: {
