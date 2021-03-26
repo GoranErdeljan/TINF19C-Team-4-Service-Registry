@@ -19,13 +19,17 @@ module.exports.start = function() {
         client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
         setInterval(() => {
             pubHealth()
-        }, 5000)
+        }, 60000)
     })
     client.on('message', (topic, message) => {
         console.log('Topic: ' + topic + ' Message: ' + message)
         if (topic.includes('get') && topic.includes('mam'))
         {
             client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
+        }
+        else if (topic.includes("get") && topic.includes("health"))
+        {
+            pubHealth();
         }
     })
 }
