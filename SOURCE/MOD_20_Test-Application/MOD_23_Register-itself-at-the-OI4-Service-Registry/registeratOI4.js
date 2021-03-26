@@ -73,7 +73,8 @@ function pubLicense()
         Timestamp: new Date().toISOString(),
         Payload: {
             licenses: [ { 
-                licenseId: "Apache2.0"
+                licenseId: "Apache2.0",
+                components: []
             } ]
         }
     }], "2ae0505e-2830-4980-b65e-0bbdf08e2d45"))
