@@ -6,11 +6,17 @@ const SerialNumber = 'undefined'
 const Model = 'DNS_SD_Test_Application'
 const Productcode = 'DNS_SD_TEST'
 const oi4Identifier = 'urn:undefined.com/' + Model + '/' + Productcode + '/' + SerialNumber
-const DeviceClass = 'Registry'
+const DeviceClass = 'Aggregation'
+
+var config = {
+    mqtt: 'mqtt://localhost'
+}
 
 module.exports.start = function() {
-    // Send mam to: 'oi4/Aggregation/<appId>/pub/mam/<oi4Identifier>'
+    // Connect to MQTT Broker
     client = mqtt.connect('mqtt://localhost')
+
+    // Handle Connection
     client.on('connect', () => {
         client.subscribe('oi4/'+ DeviceClass + '/' + oi4Identifier + '/#', (err) => {
             if (err)
@@ -21,6 +27,8 @@ module.exports.start = function() {
             pubHealth()
         }, 60000)
     })
+
+    // Handle Messages
     client.on('message', (topic, message) => {
         console.log('Topic: ' + topic + ' Message: ' + message)
         if (topic.includes('get') && topic.includes('mam'))
@@ -31,9 +39,14 @@ module.exports.start = function() {
         {
             pubHealth();
         }
+        else if (topic.includes("get") && topic.includes("config"))
+        {
+            pubConfig();
+        }
     })
 }
 
+// This function publishes the health of the Device to the MQTT Broker, for example when requested by the Registry
 function pubHealth()
 {
     client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/health/' + oi4Identifier, buildmsg([{
@@ -47,6 +60,20 @@ function pubHealth()
     }]))
 }
 
+// This function publishes the config of the Device to the MQTT Broker, for example when it is requested by the Registry
+function pubConfig() {
+    client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/config/' + oi4Identifier, buildmsg({
+        DataSetWriterId: oi4Identifier,
+        MetaDataVersion: {
+            majorVersion: 0,
+            minorVersion: 0 
+        }, 
+        Timestamp: new Date().toISOString(), 
+        Payload: config
+    }))
+}
+
+// This function builds the mam Message, as specified by the OI4
 function buildmamMessage() {
     var mam = [{
         DataSetWriterId: oi4Identifier,
@@ -73,13 +100,13 @@ function buildmamMessage() {
             Description: { 
                 Locale: "de-de",
                 Text: Model 
-            },
-            SerialNumber: 12345
+            }
         }
     }]
     return mam
 }
 
+// This function builds a message, for publication at the MQTT Broker, it creates a wrapper around a given message
 function buildmsg(messages) {
     var msgWrapper = {
         MessageId: Date.now().toString() + '-' + DeviceClass + '/' + oi4Identifier,
