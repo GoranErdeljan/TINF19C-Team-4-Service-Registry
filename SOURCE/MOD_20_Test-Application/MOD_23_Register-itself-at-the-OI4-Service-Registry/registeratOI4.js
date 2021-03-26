@@ -48,6 +48,10 @@ module.exports.start = function() {
         {
             pubLicense()
         }
+        else if (topic.includes("get") && topic.includes("licenseText"))
+        {
+            pubLicenseText()
+        }
     })
 }
 
@@ -78,6 +82,29 @@ function pubLicense()
             } ]
         }
     }], "2ae0505e-2830-4980-b65e-0bbdf08e2d45"))
+}
+
+// This function publishes the License Text to the MQTT Broker
+function pubLicenseText()
+{
+    client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/license/' + oi4Identifier, buildmsg([{
+        DataSetWriterId: oi4Identifier,
+        Timestamp: new Date().toISOString(),
+        Payload: {
+            licText: "This library is free software; you can redistribute it and/or " + 
+            "modify it under the terms of the GNU Lesser General Public " + 
+            "License as published by the Free Software Foundation; either " + 
+            "version 2.1 of the License, or (at your option) any later version. " +
+            "This library is distributed in the hope that it will be useful, " +
+            "but WITHOUT ANY WARRANTY; without even the implied warranty of " +
+            "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU " +
+            "Lesser General Public License for more details. " +
+            "You should have received a copy of the GNU Lesser General Public " +
+            "License along with this library; if not, write to the Free Software " +
+            "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 " +
+            "USA"
+        }
+    }], "a6e6c727-4057-419f-b2ea-3fe9173e71cf"))
 }
 
 // This function publishes the config of the Device to the MQTT Broker, for example when it is requested by the Registry
