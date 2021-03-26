@@ -62,7 +62,7 @@ function pubHealth()
             health: 'NORMAL_0',
             healthState: 100
         }
-    }]))
+    }], "360ca8f3-5e66-42a2-8f10-9cdf45f4bf58"))
 }
 
 // This function publishes the license to the MQTT Broker
@@ -76,12 +76,12 @@ function pubLicense()
                 licenseId: "Apache2.0"
             } ]
         }
-    }]))
+    }], "2ae0505e-2830-4980-b65e-0bbdf08e2d45"))
 }
 
 // This function publishes the config of the Device to the MQTT Broker, for example when it is requested by the Registry
 function pubConfig() {
-    client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/config/' + oi4Identifier, buildmsg({
+    client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/config/' + oi4Identifier, buildmsg([{
         DataSetWriterId: oi4Identifier,
         MetaDataVersion: {
             majorVersion: 0,
@@ -89,7 +89,7 @@ function pubConfig() {
         }, 
         Timestamp: new Date().toISOString(), 
         Payload: config
-    }))
+    }], "9d5983db-440d-4474-9fd7-1cd7a6c8b6c2"))
 }
 
 // This function builds the mam Message, as specified by the OI4
@@ -126,13 +126,13 @@ function buildmamMessage() {
 }
 
 // This function builds a message, for publication at the MQTT Broker, it creates a wrapper around a given message
-function buildmsg(messages) {
+function buildmsg(messages, DataSetClassId = '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58', CorrelationId = '') {
     var msgWrapper = {
         MessageId: Date.now().toString() + '-' + DeviceClass + '/' + oi4Identifier,
         MessageType: 'ua-data',
         PublisherId: DeviceClass + '/' + oi4Identifier,
-        DataSetClassId: '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58',
-        CorrelationId: '',
+        DataSetClassId: DataSetClassId,
+        CorrelationId: CorrelationId,
         Messages: messages
     }
     return JSON.stringify(msgWrapper)
