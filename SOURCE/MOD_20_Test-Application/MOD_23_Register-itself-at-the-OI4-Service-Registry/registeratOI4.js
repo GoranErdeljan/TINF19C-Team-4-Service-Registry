@@ -69,7 +69,7 @@ function buildmamMessage() {
             DeviceManual: "Not available",
             DeviceClass: DeviceClass,
             ProductInstanceUri: oi4Identifier,
-            RevisionCounter: '1',
+            RevisionCounter: 1,
             Description: { 
                 Locale: "de-de",
                 Text: Model 
