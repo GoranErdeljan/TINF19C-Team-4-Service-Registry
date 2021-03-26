@@ -23,6 +23,7 @@ module.exports.start = function() {
                 console.log(err)
         })
         client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
+        pubConfig()
         setInterval(() => {
             pubHealth()
         }, 60000)
@@ -43,6 +44,10 @@ module.exports.start = function() {
         {
             pubConfig();
         }
+        else if (topic.includes("get") && topic.includes("license"))
+        {
+            pubLicense()
+        }
     })
 }
 
@@ -56,6 +61,20 @@ function pubHealth()
         Payload: {
             health: 'NORMAL_0',
             healthState: 100
+        }
+    }]))
+}
+
+// This function publishes the license to the MQTT Broker
+function pubLicense()
+{
+    client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/license/' + oi4Identifier, buildmsg([{
+        DataSetWriterId: oi4Identifier,
+        Timestamp: new Date().toISOString(),
+        Payload: {
+            licenses: [ { 
+                licenseId: "Apache2.0"
+            } ]
         }
     }]))
 }
