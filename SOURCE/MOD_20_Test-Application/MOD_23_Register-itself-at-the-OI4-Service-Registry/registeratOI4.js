@@ -32,25 +32,29 @@ module.exports.start = function() {
     // Handle Messages
     client.on('message', (topic, message) => {
         console.log('Topic: ' + topic + ' Message: ' + message)
-        if (topic.includes('get') && topic.includes('mam'))
+        if (topic.includes('get/mam'))
         {
             client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
         }
-        else if (topic.includes("get") && topic.includes("health"))
+        else if (topic.includes("get/health"))
         {
             pubHealth();
         }
-        else if (topic.includes("get") && topic.includes("config"))
+        else if (topic.includes("get/config"))
         {
             pubConfig();
         }
-        else if (topic.includes("get") && topic.includes("license"))
+        else if (topic.includes("get/license"))
         {
             pubLicense()
         }
-        else if (topic.includes("get") && topic.includes("licenseText") && topic.includes("GNULGPL"))
+        else if (topic.includes("get/licenseText/GNULGPL"))
         {
             pubLicenseText()
+        }
+        else if (topic.includes("get/profile"))
+        {
+            pubProfile()
         }
     })
 }
@@ -117,6 +121,23 @@ function pubConfig() {
         }, 
         Timestamp: new Date().toISOString(), 
         Payload: config
+    }], "9d5983db-440d-4474-9fd7-1cd7a6c8b6c2"))
+}
+
+// This function publishes the Profile of the Device to the MQTT Broker
+function pubProfile() {
+    client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/profile/' + oi4Identifier, buildmsg([{
+        DataSetWriterId: oi4Identifier,
+        Timestamp: new Date().toISOString(), 
+        Payload: {
+            resource: [
+                "mam",
+                "health",
+                "license",
+                "licenseText",
+                "config"
+            ]
+        }
     }], "9d5983db-440d-4474-9fd7-1cd7a6c8b6c2"))
 }
 
