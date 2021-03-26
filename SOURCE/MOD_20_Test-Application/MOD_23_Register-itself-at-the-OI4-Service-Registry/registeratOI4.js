@@ -73,7 +73,8 @@ function buildmamMessage() {
             Description: { 
                 Locale: "de-de",
                 Text: Model 
-            } 
+            },
+            SerialNumber: 12345
         }
     }]
     return mam
