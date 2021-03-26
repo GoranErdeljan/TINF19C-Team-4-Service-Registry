@@ -138,7 +138,7 @@ function pubProfile() {
                 "config"
             ]
         }
-    }], "9d5983db-440d-4474-9fd7-1cd7a6c8b6c2"))
+    }], "48017c6a-05c8-48d7-9d85-4b08bbb707f3"))
 }
 
 // This function builds the mam Message, as specified by the OI4
