@@ -72,7 +72,7 @@ function pubHealth()
 // This function publishes the license to the MQTT Broker
 function pubLicense()
 {
-    client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/license/' + oi4Identifier, buildmsg([{
+    client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/licenseText/' + oi4Identifier, buildmsg([{
         DataSetWriterId: oi4Identifier,
         Timestamp: new Date().toISOString(),
         Payload: {
