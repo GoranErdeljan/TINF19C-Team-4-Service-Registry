@@ -87,7 +87,7 @@ function pubLicense()
 // This function publishes the License Text to the MQTT Broker
 function pubLicenseText()
 {
-    client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/licenseTest/GNULGPL', buildmsg([{
+    client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/licenseText/GNULGPL', buildmsg([{
         DataSetWriterId: oi4Identifier,
         Timestamp: new Date().toISOString(),
         Payload: {
