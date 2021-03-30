@@ -65,7 +65,7 @@ module.exports.start = function() {
         {
             pubLicense()
         }
-        else if (topic.includes("get/licenseText/GNULGPL"))
+        else if (topic.includes("get/licenseText/GNULGP"))
         {
             pubLicenseText()
         }
