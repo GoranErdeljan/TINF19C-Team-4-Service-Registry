@@ -65,15 +65,15 @@ module.exports.start = function() {
         }
         else if (topic.includes("get/health"))
         {
-            pubHealth();
+            pubHealth(correlationId);
         }
         else if (topic.includes("get/config"))
         {
-            pubConfig();
+            pubConfig(correlationId);
         }
         else if (topic.includes("get/license"))
         {
-            pubLicense()
+            pubLicense(correlationId)
         }
         else if (topic.includes("get/licenseText/GNULGP"))
         {
@@ -85,13 +85,13 @@ module.exports.start = function() {
         }
         else if (topic.includes("get/publicationList"))
         {
-            pubPublicationList()
+            pubPublicationList(correlationId)
         }
     })
 }
 
 // This function publishes the health of the Device to the MQTT Broker, for example when requested by the Registry
-function pubHealth()
+function pubHealth(correlationId = '')
 {
     client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/health/' + oi4Identifier, buildmsg([{
         DataSetWriterId: oi4Identifier,
@@ -101,11 +101,11 @@ function pubHealth()
             health: 'NORMAL_0',
             healthState: 100
         }
-    }], "360ca8f3-5e66-42a2-8f10-9cdf45f4bf58"))
+    }], "360ca8f3-5e66-42a2-8f10-9cdf45f4bf58", correlationId))
 }
 
 // This function publishes the license to the MQTT Broker
-function pubLicense()
+function pubLicense(correlationId = '')
 {
     client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/license/' + oi4Identifier, buildmsg([{
         DataSetWriterId: oi4Identifier,
@@ -116,11 +116,11 @@ function pubLicense()
                 components: []
             } ]
         }
-    }], "2ae0505e-2830-4980-b65e-0bbdf08e2d45"))
+    }], "2ae0505e-2830-4980-b65e-0bbdf08e2d45", correlationId))
 }
 
 // This function publishes the License Text to the MQTT Broker
-function pubLicenseText()
+function pubLicenseText(correlationId = '')
 {
     client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/licenseText/GNULGPL', buildmsg([{
         DataSetWriterId: oi4Identifier,
@@ -139,11 +139,11 @@ function pubLicenseText()
             "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 " +
             "USA"
         }
-    }], "a6e6c727-4057-419f-b2ea-3fe9173e71cf"))
+    }], "a6e6c727-4057-419f-b2ea-3fe9173e71cf", correlationId))
 }
 
 // This function publishes the config of the Device to the MQTT Broker, for example when it is requested by the Registry
-function pubConfig() {
+function pubConfig(correlationId = '') {
     client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/config/' + oi4Identifier, buildmsg([{
         DataSetWriterId: oi4Identifier,
         MetaDataVersion: {
@@ -152,7 +152,7 @@ function pubConfig() {
         }, 
         Timestamp: new Date().toISOString(), 
         Payload: config
-    }], "9d5983db-440d-4474-9fd7-1cd7a6c8b6c2"))
+    }], "9d5983db-440d-4474-9fd7-1cd7a6c8b6c2", correlationId))
 }
 
 // This function publishes the Profile of the Device to the MQTT Broker
@@ -174,14 +174,14 @@ function pubProfile(correlationId = '') {
 }
 
 // This function publishes the PublicationList to the MQTT Broker
-function pubPublicationList() {
+function pubPublicationList(correlationId = '') {
     client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/publicationList', buildmsg({
         DataSetWriterId: oi4Identifier,
         Timestamp: new Date().toISOString(), 
         Payload: {
             publicationList: []
         }   
-    }, "217434d6-6e1e-4230-b907-f52bc9ffe152"))
+    }, "217434d6-6e1e-4230-b907-f52bc9ffe152", correlationId))
 }
 
 // This function builds the mam Message, as specified by the OI4
