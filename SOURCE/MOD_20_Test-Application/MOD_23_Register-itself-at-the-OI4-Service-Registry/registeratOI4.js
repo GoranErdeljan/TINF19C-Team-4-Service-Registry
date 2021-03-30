@@ -32,6 +32,7 @@ module.exports.start = function() {
     // Handle Messages
     client.on('message', (topic, message) => {
         console.log('Topic: ' + topic + ' Message: ' + message)
+        console.log()
         if (topic.includes('get/mam'))
         {
             client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
@@ -151,8 +152,7 @@ function pubPublicationList() {
         DataSetWriterId: oi4Identifier,
         Timestamp: new Date().toISOString(), 
         Payload: {
-            publicationList: [
-            ]
+            publicationList: []
         }   
     }, "217434d6-6e1e-4230-b907-f52bc9ffe152"))
 }
