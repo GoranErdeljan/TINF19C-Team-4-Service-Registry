@@ -101,7 +101,7 @@ function pubHealth(correlationId = '')
             health: 'NORMAL_0',
             healthState: 100
         }
-    }], "360ca8f3-5e66-42a2-8f10-9cdf45f4bf58", correlationId))
+    }], "d8e7b6df-42ba-448a-975a-199f59e8ffeb", correlationId))
 }
 
 // This function publishes the license to the MQTT Broker
