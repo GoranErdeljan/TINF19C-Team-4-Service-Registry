@@ -72,7 +72,7 @@ module.exports.start = function() {
         }
         else if (topic.includes("get/profile"))
         {
-            pubProfile()
+            pubProfile(correlationId)
         }
         else if (topic.includes("get/publicationList"))
         {
@@ -147,10 +147,11 @@ function pubConfig() {
 }
 
 // This function publishes the Profile of the Device to the MQTT Broker
-function pubProfile() {
+function pubProfile(correlationId = '') {
     client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/profile/' + oi4Identifier, buildmsg([{
         DataSetWriterId: oi4Identifier,
         Timestamp: new Date().toISOString(), 
+        Status:0,
         Payload: {
             resource: [
                 "mam",
@@ -160,7 +161,7 @@ function pubProfile() {
                 "config"
             ]
         }
-    }], "48017c6a-05c8-48d7-9d85-4b08bbb707f3"))
+    }], "48017c6a-05c8-48d7-9d85-4b08bbb707f3", correlationId))
 }
 
 // This function publishes the PublicationList to the MQTT Broker
