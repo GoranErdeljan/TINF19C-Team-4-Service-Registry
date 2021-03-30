@@ -175,13 +175,13 @@ function pubProfile(correlationId = '') {
 
 // This function publishes the PublicationList to the MQTT Broker
 function pubPublicationList(correlationId = '') {
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/publicationList', buildmsg({
+    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/publicationList', buildmsg([{
         DataSetWriterId: oi4Identifier,
         Timestamp: new Date().toISOString(), 
         Payload: {
             publicationList: []
         }   
-    }, "217434d6-6e1e-4230-b907-f52bc9ffe152", correlationId))
+    }], "217434d6-6e1e-4230-b907-f52bc9ffe152", correlationId))
 }
 
 // This function builds the mam Message, as specified by the OI4
