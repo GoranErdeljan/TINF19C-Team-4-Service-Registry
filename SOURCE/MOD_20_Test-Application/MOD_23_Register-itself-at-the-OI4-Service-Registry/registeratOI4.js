@@ -56,6 +56,10 @@ module.exports.start = function() {
         {
             pubProfile()
         }
+        else if (topic.includes("get/publicationList"))
+        {
+            pubPublicationList()
+        }
     })
 }
 
@@ -139,6 +143,18 @@ function pubProfile() {
             ]
         }
     }], "48017c6a-05c8-48d7-9d85-4b08bbb707f3"))
+}
+
+// This function publishes the PublicationList to the MQTT Broker
+function pubPublicationList() {
+    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/publicationList', buildmsg({
+        DataSetWriterId: oi4Identifier,
+        Timestamp: new Date().toISOString(), 
+        Payload: {
+            publicationList: [
+            ]
+        }   
+    }, "217434d6-6e1e-4230-b907-f52bc9ffe152"))
 }
 
 // This function builds the mam Message, as specified by the OI4
