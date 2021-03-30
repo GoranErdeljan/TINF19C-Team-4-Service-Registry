@@ -28,6 +28,7 @@ module.exports.start = function() {
         }, 60000)
         function exitHandler()
         {
+            console.log("Handling Exit")
             client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/health/' + oi4Identifier, buildmsg([{
                 DataSetWriterId: oi4Identifier,
                 Timestamp: new Date().toISOString(),
