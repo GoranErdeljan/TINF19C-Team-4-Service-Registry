@@ -49,7 +49,16 @@ module.exports.start = function() {
     client.on('message', (topic, message) => {
         console.log('Topic: ' + topic + ' Message: ' + message)
         console.log()
-        let correlationId = JSON.parse(message).MessageId
+        let correlationId
+        if (JSON.parse(message).CorrelationId !== "")
+        {
+            correlationId = JSON.parse(message).CorrelationId
+        }
+        else
+        {
+            correlationId = JSON.parse(message).MessageId
+        }
+        
         if (topic.includes('get/mam'))
         {
             client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage(), '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58', correlationId))
