@@ -23,10 +23,22 @@ module.exports.start = function() {
                 console.log(err)
         })
         client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
-        pubConfig()
         setInterval(() => {
             pubHealth()
         }, 60000)
+        function exitHandler()
+        {
+            client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/health/' + oi4Identifier, buildmsg([{
+                DataSetWriterId: oi4Identifier,
+                Timestamp: new Date().toISOString(),
+                Status: 0,
+                Payload: {
+                    health: 'NORMAL_0',
+                    healthState: 0
+                }
+            }], "360ca8f3-5e66-42a2-8f10-9cdf45f4bf58"))
+        }
+        process.on('exit', exitHandler.bind());
     })
 
     // Handle Messages
