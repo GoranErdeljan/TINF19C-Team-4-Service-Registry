@@ -37,9 +37,7 @@ module.exports.start = function() {
                     health: 'NORMAL_0',
                     healthState: 0
                 }
-            }], "360ca8f3-5e66-42a2-8f10-9cdf45f4bf58"), () => {
-                process.exit()
-            })
+            }], "360ca8f3-5e66-42a2-8f10-9cdf45f4bf58"))
         }
         process.on('exit', exitHandler.bind());
         process.on('SIGINT', exitHandler.bind());
