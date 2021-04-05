@@ -36,6 +36,7 @@ module.exports.addDNS_SDEntry = function (entry) {
             object.a.push(answer.data)
         }
         if (answer.type == 'TXT') {
+            console.log(answer.data)
             object.txt.push(JSON.stringify(answer.data))
         }
     })
