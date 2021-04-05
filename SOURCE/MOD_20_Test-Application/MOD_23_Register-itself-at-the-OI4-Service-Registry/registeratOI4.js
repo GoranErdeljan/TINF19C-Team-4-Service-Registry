@@ -9,7 +9,6 @@ const oi4Identifier = 'urn:undefined.com/' + Model + '/' + Productcode + '/' + S
 const DeviceClass = 'Aggregation'
 
 var config = {
-    mqtt: 'mqtt://localhost'
 }
 
 module.exports.start = function() {
