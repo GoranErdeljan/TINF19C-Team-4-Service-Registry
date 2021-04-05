@@ -4,6 +4,7 @@ function getDNSSDEntries() {
     $.get('/DNSSD/Entries', {}, function (data) {
         data = JSON.parse(data)
         data.forEach(entry => {
+            dnssd_Entries_List.innerHtml = ""
             console.log(entry)
 
             var tr = document.createElement("tr")
