@@ -36,7 +36,7 @@ module.exports.start = function (mam) {
                     ttl: 60,
                     data: [
                         // Put TXT Records in here
-                        JSON.stringify(mam[0].Payload.Manufacturer)
+                        JSON.stringify(mam[0].Payload)
                     ]
                 }]
             })
