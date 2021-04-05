@@ -3,8 +3,8 @@ getDNSSDEntries()
 function getDNSSDEntries() {
     $.get('/DNSSD/Entries', {}, function (data) {
         data = JSON.parse(data)
-        
-        $("tr").remove();
+
+        $("tbody tr").remove()
 
         data.forEach(entry => {
             console.log(entry)
