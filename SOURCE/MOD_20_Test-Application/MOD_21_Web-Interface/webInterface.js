@@ -37,7 +37,10 @@ module.exports.addDNS_SDEntry = function (entry) {
         }
         if (answer.type == 'TXT') {
             console.log(answer.data)
-            object.txt.push(JSON.stringify(answer.data))
+            answer.data.forEach(buffer => {
+                object.txt.push(buffer.toString())
+            })
+            //object.txt.push(JSON.stringify(answer.data))
         }
     })
     let exists = false
