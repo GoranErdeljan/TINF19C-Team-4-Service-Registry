@@ -4,13 +4,19 @@ var callbacks = []
 
 module.exports.start = function () {
     setInterval(() => {
+        mdns.query({
+            questions: [{
+                name: '',
+                type: 'A'
+            }]
+        })
+    }, 60000)
     mdns.query({
         questions: [{
             name: '',
             type: 'A'
         }]
-    })}, 60000)
-
+    })
     mdns.on('response', function (query) {
         console.log("DNS SD Response: ")
         console.log(query)
@@ -20,6 +26,6 @@ module.exports.start = function () {
     })
 }
 
-module.exports.addCallback = function(callback) {
+module.exports.addCallback = function (callback) {
     callbacks.push(callback)
 }
