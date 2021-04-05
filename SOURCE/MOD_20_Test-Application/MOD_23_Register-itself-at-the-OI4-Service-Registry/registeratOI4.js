@@ -9,11 +9,19 @@ const oi4Identifier = 'urn:undefined.com/' + Model + '/' + Productcode + '/' + S
 const DeviceClass = 'Aggregation'
 
 var config = {
+    hostname: "localhost",
+    port: 1883
 }
 
-module.exports.start = function() {
+module.exports.start = function(hostname, port) {
+
+    if (typeof hostname === 'string')
+        config.hostname = hostname
+    if (typeof port === 'number')
+        config.port = port
+
     // Connect to MQTT Broker
-    client = mqtt.connect('mqtt://localhost')
+    client = mqtt.connect([{ host: config.hostname, port: config.port }])
 
     // Handle Connection
     client.on('connect', () => {
@@ -158,7 +166,7 @@ function pubConfig(correlationId = '') {
             minorVersion: 0 
         }, 
         Timestamp: new Date().toISOString(), 
-        Payload: config
+        Payload: {}
     }], "9d5983db-440d-4474-9fd7-1cd7a6c8b6c2", correlationId))
 }
 

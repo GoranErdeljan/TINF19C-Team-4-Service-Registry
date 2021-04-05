@@ -5,14 +5,21 @@ var app = express()
 
 var dnssdEntries = []
 
+var config = {
+    port: 8080
+}
 
-module.exports.start = function () {
+module.exports.start = function (port) {
+    // Set Port to input
+    if (typeof port === 'number')
+        config.port = port
+    
     app.use(serveStatic('./MOD_21_Web-Interface/wwwroot'))
     app.get('/DNSSD/Entries', function (req, res) {
         res.send(JSON.stringify(dnssdEntries))
     })
-    app.listen(8080, () => {
-        console.log("Server running on 8080 ...")
+    app.listen(config.port, () => {
+        console.log("Server running on " + config.port + " ...")
     })
 }
 
