@@ -19,9 +19,12 @@ module.exports.start = function (mam) {
                 answers: [{
                     name: 'Service Discovery Test Application',
                     type: 'SRV',
-                    data: 
-                        mam.Payload
-                    
+                    data: {
+                        port: 8080,
+                        weigth: 0,
+                        priority: 10,
+                        target: 'localhost'
+                    }
                 }, {
                     name: '_oi4-servicediscovery._http._tcp.local',
                     type: 'A',
@@ -33,7 +36,8 @@ module.exports.start = function (mam) {
                     ttl: 60,
                     data: [
                         // Put TXT Records in here
-                        JSON.stringify(mam[0].Payload)
+                        JSON.stringify(mam[0].Payload.Manufacturer),
+                        JSON.stringify(mam[0].Payload.Description)
                     ]
                 }]
             })
