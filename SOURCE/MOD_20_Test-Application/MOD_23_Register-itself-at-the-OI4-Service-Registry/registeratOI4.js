@@ -166,8 +166,7 @@ function pubProfile(correlationId = '') {
                 "mam",
                 "health",
                 "license",
-                "licenseText",
-                "config"
+                "licenseText"
             ]
         }
     }], "48017c6a-05c8-48d7-9d85-4b08bbb707f3", correlationId))
@@ -208,6 +207,7 @@ function buildmamMessage() {
             DeviceClass: DeviceClass,
             ProductInstanceUri: oi4Identifier,
             RevisionCounter: 1,
+            SerialNumber: SerialNumber,
             Description: { 
                 Locale: "de-de",
                 Text: Model 
