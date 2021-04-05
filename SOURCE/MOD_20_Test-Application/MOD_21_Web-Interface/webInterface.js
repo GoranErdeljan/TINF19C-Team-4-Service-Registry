@@ -21,6 +21,12 @@ module.exports.emptyDNS_SDEntries = function() {
 }
 
 module.exports.addDNS_SDEntry = function(entry){
-    if (!dnssdEntries.includes(entry))
+    let exists = false
+
+    dnssdEntries.forEach(element => {
+        if (element === entry)
+            exists = true
+    })
+    if (!exists)
         dnssdEntries.push(entry)
 }
