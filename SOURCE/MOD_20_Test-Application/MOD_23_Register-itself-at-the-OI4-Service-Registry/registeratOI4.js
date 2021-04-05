@@ -91,6 +91,10 @@ module.exports.start = function() {
             pubPublicationList(correlationId)
         }
     })
+
+    client.on('error', (err) => {
+        console.log(err)
+    })
 }
 
 // This function publishes the health of the Device to the MQTT Broker, for example when requested by the Registry
