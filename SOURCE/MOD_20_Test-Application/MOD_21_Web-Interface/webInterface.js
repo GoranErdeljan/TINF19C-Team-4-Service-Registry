@@ -21,5 +21,6 @@ module.exports.emptyDNS_SDEntries = function() {
 }
 
 module.exports.addDNS_SDEntry = function(entry){
-    dnssdEntries.push(entry)
+    if (!dnssdEntries.includes(entry))
+        dnssdEntries.push(entry)
 }
