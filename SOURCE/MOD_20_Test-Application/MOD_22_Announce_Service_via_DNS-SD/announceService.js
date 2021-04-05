@@ -8,7 +8,7 @@ module.exports.start = function (mam) {
     ]
 
     Object.keys(mam).forEach(key => {
-        txt.push("key" + "=" + JSON.stringify(mam[key]))
+        txt.push(key + "=" + JSON.stringify(mam[key]))
     })
 
     mdns.on('query', function (query) {
