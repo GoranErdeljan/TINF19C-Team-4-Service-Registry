@@ -36,7 +36,7 @@ module.exports.start = function (mam) {
                     ttl: 60,
                     data: [
                         // Put TXT Records in here
-                        ("mam=" + JSON.stringify(mam))
+                        JSON.stringify(mam)
                     ]
                 }]
             })
