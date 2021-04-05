@@ -161,12 +161,15 @@ function pubProfile(correlationId = '') {
         Timestamp: new Date().toISOString(), 
         Status:0,
         Payload: {
-            resource: [
+            resource: ["health", "license", "rtLicense", "config", "mam", "profile", "licenseText", "publicationList", "subscriptionList"]
+
+            /*resource: [
                 "mam",
                 "health",
                 "license",
-                "licenseText"
-            ]
+                "licenseText",
+                "config"
+            ]*/
         }
     }], "48017c6a-05c8-48d7-9d85-4b08bbb707f3", correlationId))
 }
