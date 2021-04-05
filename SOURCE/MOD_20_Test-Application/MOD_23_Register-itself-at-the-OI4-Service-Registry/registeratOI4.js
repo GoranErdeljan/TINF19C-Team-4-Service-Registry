@@ -25,6 +25,7 @@ module.exports.start = function() {
         setInterval(() => {
             pubHealth()
         }, 60000)
+
         function exitHandler()
         {
             console.log("Handling Exit")
@@ -37,7 +38,7 @@ module.exports.start = function() {
                     healthState: 0
                 }
             }], "360ca8f3-5e66-42a2-8f10-9cdf45f4bf58"),{}, () => {
-                process.exit()
+                process.kill()
             })
         }
         process.on('exit', exitHandler.bind());
