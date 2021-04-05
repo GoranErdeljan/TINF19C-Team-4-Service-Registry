@@ -161,7 +161,7 @@ function pubProfile(correlationId = '') {
         Timestamp: new Date().toISOString(), 
         Status:0,
         Payload: {
-            resource: ["health", "license", "rtLicense", "config", "mam", "profile", "licenseText", "publicationList", "subscriptionList"]
+            resource: ["health", "license", "config", "mam", "profile", "licenseText", "publicationList", "subscriptionList"]
 
             /*resource: [
                 "mam",
