@@ -29,7 +29,7 @@ function getDNSSDEntries() {
             })
             tr.appendChild(td);
 
-            dnssd_Entries_List.firstElementChild.appendChild(tr);
+            dnssd_Entries_List.lastElementChild.appendChild(tr);
         })
     })
 }
