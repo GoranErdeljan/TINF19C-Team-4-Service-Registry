@@ -11,8 +11,8 @@ module.exports.start = function () {
     })
 
     mdns.on('response', function (query) {
-        console.log("Response: ")
-        console.log(query);
+        //console.log("Response: ")
+        //console.log(query)
         callbacks.forEach(cb => {
             cb(query)
         })

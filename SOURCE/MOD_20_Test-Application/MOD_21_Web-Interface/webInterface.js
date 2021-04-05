@@ -3,7 +3,6 @@ var serveStatic = require('serve-static')
 
 var app = express()
 
-var serviceRegistryEntries = []
 var dnssdEntries = []
 
 
