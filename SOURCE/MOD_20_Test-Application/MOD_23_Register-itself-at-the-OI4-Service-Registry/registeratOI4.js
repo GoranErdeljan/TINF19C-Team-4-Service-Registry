@@ -54,6 +54,7 @@ module.exports.start = function(hostname, port) {
         }
         process.on('exit', exitHandler.bind());
         process.on('SIGINT', exitHandler.bind());
+        process.on('SIGTERM', exitHandler.bind());
     })
 
     // Handle Messages
