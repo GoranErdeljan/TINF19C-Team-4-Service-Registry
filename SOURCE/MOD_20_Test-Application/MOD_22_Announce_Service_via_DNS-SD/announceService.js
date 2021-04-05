@@ -2,7 +2,7 @@ var mdns = require('multicast-dns')()
 
 const typeArray = ["", "_oi4-servicediscovery", "_http", "_tcp", "local"]
 
-module.exports.start = function () {
+module.exports.start = function (mam) {
     mdns.on('query', function (query) {
         let questions = query.questions
         let addressed = true
@@ -36,7 +36,7 @@ module.exports.start = function () {
                     ttl: 60,
                     data: [
                         // Put TXT Records in here
-                        "port=8080"
+                        "mam=" + JSON.stringify(mam)
                     ]
                 }]
             })

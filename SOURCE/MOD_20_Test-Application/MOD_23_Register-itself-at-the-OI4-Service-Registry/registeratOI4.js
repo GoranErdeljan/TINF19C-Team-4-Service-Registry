@@ -219,6 +219,8 @@ function buildmamMessage() {
     return mam
 }
 
+module.exports.mam = buildmamMessage
+
 // This function builds a message, for publication at the MQTT Broker, it creates a wrapper around a given message
 function buildmsg(messages, DataSetClassId = '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58', CorrelationId = '') {
     var msgWrapper = {

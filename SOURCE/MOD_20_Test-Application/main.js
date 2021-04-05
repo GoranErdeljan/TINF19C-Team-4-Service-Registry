@@ -10,5 +10,5 @@ dnssdListener.addCallback(function(entry) {
     webInterface.addDNS_SDEntry(entry)
 })
 
-announceService.start()
+announceService.start(registeratOI4.mam())
 registeratOI4.start()
