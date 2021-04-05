@@ -19,12 +19,9 @@ module.exports.start = function (mam) {
                 answers: [{
                     name: 'Service Discovery Test Application',
                     type: 'SRV',
-                    data: {
-                        port: 8080,
-                        weigth: 0,
-                        priority: 10,
-                        target: 'localhost'
-                    }
+                    data: 
+                        mam.Payload
+                    
                 }, {
                     name: '_oi4-servicediscovery._http._tcp.local',
                     type: 'A',
