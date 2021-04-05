@@ -6,7 +6,6 @@ var registeratOI4 = require("./MOD_23_Register-itself-at-the-OI4-Service-Registr
 webInterface.start()
 dnssdListener.start()
 dnssdListener.addCallback(function(entry) {
-    console.log(entry)
     webInterface.addDNS_SDEntry(entry)
 })
 
