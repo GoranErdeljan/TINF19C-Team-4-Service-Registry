@@ -11,5 +11,3 @@ dnssdListener.addCallback(function(entry) {
 
 announceService.start(registeratOI4.mam()[0].Payload)
 registeratOI4.start()
-
-console.log(registeratOI4.mam())

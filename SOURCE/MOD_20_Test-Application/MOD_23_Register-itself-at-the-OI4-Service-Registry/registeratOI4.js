@@ -1,7 +1,7 @@
 var mqtt = require('mqtt')
-var crypto = require('crypto')
 var client
 
+// Configuration
 const SerialNumber = 'undefined'
 const Model = 'DNS_SD_Test_Application'
 const Productcode = 'DNS_SD_TEST'
@@ -26,6 +26,7 @@ module.exports.start = function() {
             pubHealth()
         }, 60000)
 
+        // Handle Exiting by sending a goodbye message to the MQTT-Broker
         function exitHandler()
         {
             console.log("Handling Exit")
@@ -39,8 +40,6 @@ module.exports.start = function() {
                 }
             }], "d8e7b6df-42ba-448a-975a-199f59e8ffeb"),{}, (err) => {
                 setTimeout(() => {
-                console.log("Exiting...")
-                console.log(err)
                     process.kill(process.pid)
                 }, 5000)
             })
@@ -63,31 +62,31 @@ module.exports.start = function() {
             correlationId = JSON.parse(message).MessageId
         }
         
-        if (topic.includes('get/mam'))
+        if (topic.includes('get/mam')) // Handle Requests requesting the Master Asset Model
         {
             client.publish('oi4/'+ DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage(), '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58', correlationId))
         }
-        else if (topic.includes("get/health"))
+        else if (topic.includes("get/health")) // Handle Requests concerning the Health of the Application
         {
             pubHealth(correlationId);
         }
-        else if (topic.includes("get/config"))
+        else if (topic.includes("get/config")) // Handle Requests concerning the Configuration of the Application
         {
             pubConfig(correlationId);
         }
-        else if (topic.includes("get/licenseText/GNULGPL")) 
+        else if (topic.includes("get/licenseText/GNULGPL")) // Handle Requests concerning specific Licenses
         {
             pubLicenseText(correlationId)
         }
-        else if (topic.includes("get/license/"))
+        else if (topic.includes("get/license/")) // Handle Requests concerning the License of the Application
         {
             pubLicense(correlationId)
         }
-        else if (topic.includes("get/profile"))
+        else if (topic.includes("get/profile")) // Handle Requests concerning the Profile of the Application
         {
             pubProfile(correlationId)
         }
-        else if (topic.includes("get/publicationList"))
+        else if (topic.includes("get/publicationList")) // Handle Requests concerning the PublicationList of the Application
         {
             pubPublicationList(correlationId)
         }
@@ -167,14 +166,6 @@ function pubProfile(correlationId = '') {
         Status:0,
         Payload: {
             resource: ["health", "license", "config", "mam", "profile", "licenseText", "publicationList"]
-
-            /*resource: [
-                "mam",
-                "health",
-                "license",
-                "licenseText",
-                "config"
-            ]*/
         }
     }], "48017c6a-05c8-48d7-9d85-4b08bbb707f3", correlationId))
 }
