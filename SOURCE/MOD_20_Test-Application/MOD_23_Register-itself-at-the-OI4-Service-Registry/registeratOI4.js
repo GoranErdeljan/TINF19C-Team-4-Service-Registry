@@ -37,8 +37,9 @@ module.exports.start = function() {
                     health: 'NORMAL_0',
                     healthState: 0
                 }
-            }], "d8e7b6df-42ba-448a-975a-199f59e8ffeb"),{}, () => {
+            }], "d8e7b6df-42ba-448a-975a-199f59e8ffeb"),{}, (err) => {
                 console.log("Exiting...")
+                console.log(err)
                 process.kill(process.pid)
             })
         }
