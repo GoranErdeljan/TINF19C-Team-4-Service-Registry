@@ -32,6 +32,8 @@ if (envvar.includes("MQTT_HOSTNAME"))
 if (envvar.includes("MQTT_PORT"))
     config.mqtt.port = process.env.MQTT_PORT
 
+console.log(config)
+
 // Start Services
 webInterface.start(config.webInterface.port)
 dnssdListener.start()
