@@ -75,8 +75,9 @@ module.exports.start = function() {
         {
             pubLicense(correlationId)
         }
-        else if (topic.includes("get/licenseText/GNULGP"))
+        else if (topic.includes("get/licenseText/GNULGPL"))
         {
+            console.log("Sending LicenseText of GNULGPL")
             pubLicenseText(correlationId)
         }
         else if (topic.includes("get/profile"))
