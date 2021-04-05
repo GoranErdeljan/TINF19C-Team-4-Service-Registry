@@ -44,8 +44,10 @@ module.exports.addDNS_SDEntry = function (entry) {
     let exists = false
 
     dnssdEntries.forEach(element => {
-        if (element.txt === object.txt)
-            exists = true
+        element.txt.forEach(record => {
+            if (object.txt.includes(record))
+                exists = true
+        })
     })
     if (!exists)
         dnssdEntries.push(object)
