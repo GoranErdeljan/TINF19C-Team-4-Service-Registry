@@ -38,7 +38,7 @@ module.exports.start = function() {
                     healthState: 0
                 }
             }], "360ca8f3-5e66-42a2-8f10-9cdf45f4bf58"),{}, () => {
-                process.kill()
+                process.kill(process.pid)
             })
         }
         process.on('exit', exitHandler.bind());
