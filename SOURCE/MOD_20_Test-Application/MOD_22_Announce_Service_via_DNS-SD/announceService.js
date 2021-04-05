@@ -3,6 +3,14 @@ var mdns = require('multicast-dns')()
 const typeArray = ["", "_oi4-servicediscovery", "_http", "_tcp", "local"]
 
 module.exports.start = function (mam) {
+    let txt = [
+        "oi4=true"
+    ]
+
+    Object.keys(mam).forEach(key => {
+        txt.push("key" + "=" + JSON.stringify(mam[key]))
+    })
+
     mdns.on('query', function (query) {
         let questions = query.questions
         let addressed = true
@@ -34,11 +42,7 @@ module.exports.start = function (mam) {
                     name: '_oi4-servicediscovery._http._tcp.local',
                     type: 'TXT',
                     ttl: 60,
-                    data: [
-                        // Put TXT Records in here
-                        "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
-                        "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
-                    ]
+                    data: txt
                 }]
             })
         }
