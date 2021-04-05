@@ -3,8 +3,8 @@ getDNSSDEntries()
 function getDNSSDEntries() {
     $.get('/DNSSD/Entries', {}, function (data) {
         data = JSON.parse(data)
+        dnssd_Entries_List.firstElementChild.innerHtml = ""
         data.forEach(entry => {
-            dnssd_Entries_List.innerHtml = ""
             console.log(entry)
 
             var tr = document.createElement("tr")
