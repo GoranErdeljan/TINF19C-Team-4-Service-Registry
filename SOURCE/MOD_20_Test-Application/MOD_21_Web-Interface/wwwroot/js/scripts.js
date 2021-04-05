@@ -21,7 +21,7 @@ function getDNSSDEntries() {
 
             td = document.createElement("td")
             entry.txt.forEach(element => {
-                td.appendChild(document.createTextNode(element + " "))
+                td.appendChild(document.createTextNode(element + "<br> "))
             })
             tr.appendChild(td);
 
