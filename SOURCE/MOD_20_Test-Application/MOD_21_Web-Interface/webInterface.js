@@ -6,7 +6,7 @@ var app = express()
 var dnssdEntries = []
 
 
-module.exports.start = function() {
+module.exports.start = function () {
     app.use(serveStatic('./MOD_21_Web-Interface/wwwroot'))
     app.get('/DNSSD/Entries', function (req, res) {
         res.send(JSON.stringify(dnssdEntries))
@@ -16,11 +16,29 @@ module.exports.start = function() {
     })
 }
 
-module.exports.emptyDNS_SDEntries = function() {
+module.exports.emptyDNS_SDEntries = function () {
     dnssdEntries = []
 }
 
-module.exports.addDNS_SDEntry = function(entry){
+module.exports.addDNS_SDEntry = function (entry) {
+
+    let object = {
+        srv: [],
+        a: [],
+        txt: []
+    }
+
+    entry.answers.forEach(answer => {
+        if (answer.type == 'SRV') {
+            object.srv.push(answer.name)
+        }
+        if (answer.type == 'A' || answer.type == 'AAAA') {
+            object.a.push(answer.data)
+        }
+        if (answer.type == 'TXT') {
+            object.txt.push(JSON.stringify(answer.data))
+        }
+    })
     let exists = false
 
     dnssdEntries.forEach(element => {
