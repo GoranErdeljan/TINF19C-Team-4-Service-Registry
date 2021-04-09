@@ -10,17 +10,31 @@
     <link rel="stylesheet" href="css/styles.css">
 
 </head>
-    <h4> DNS-SD Entries </h4>
-
-    <ul id="dnssd_Entries_List">
-    </ul>
-
-    <h4> OI4 Service-Registry Entries </h4>
-    
-    <ul id="registry_Entries_List">
-    </ul>
 
 <body>
+    <div class="entryOverview">
+        <h4> DNS-SD Entries </h4>
+
+        <table id="dnssd_Entries_List">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>A / AAAA</th>
+                    <th>TXT</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+    <div class="infoBox">
+        <h4> About this Project </h4>
+        <p>
+            This project was part of a Software Engineering Course at the DHBW Stuttgart. You can check out our <a
+                href="https://github.com/GoranErdeljan/TINF19C-Team-4-Service-Registry">GitHub</a>.
+        </p>
+    </div>
     <script src="js/jquery-3.6.0.js"></script>
     <script src="js/scripts.js"></script>
 </body>

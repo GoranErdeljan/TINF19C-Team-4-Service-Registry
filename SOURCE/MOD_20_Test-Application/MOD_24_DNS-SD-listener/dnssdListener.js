@@ -1,24 +1,31 @@
 var mdns = require('multicast-dns')();
-const mqtt = require('mqtt');
 
-var mqtt_client = mqtt.connect('mqtt://localhost')
 var callbacks = []
 
-mdns.query({
-    questions: [{
-        name: '',
-        type: 'A'
-    }]
-})
-
-mdns.on('response', function (query) {
-    console.log("Response: ")
-    console.log(query);
-    callbacks.forEach(cb => {
-        cb(query)
+module.exports.start = function () {
+    setInterval(() => {
+        mdns.query({
+            questions: [{
+                name: '',
+                type: 'A'
+            }]
+        })
+    }, 60000)
+    mdns.query({
+        questions: [{
+            name: '',
+            type: 'A'
+        }]
     })
-})
+    mdns.on('response', function (query) {
+        console.log("DNS SD Response: ")
+        console.log(query)
+        callbacks.forEach(cb => {
+            cb(query)
+        })
+    })
+}
 
-module.exports.addCallback = function(callback) {
+module.exports.addCallback = function (callback) {
     callbacks.push(callback)
 }

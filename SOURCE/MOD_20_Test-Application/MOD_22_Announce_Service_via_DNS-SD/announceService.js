@@ -2,7 +2,27 @@ var mdns = require('multicast-dns')()
 
 const typeArray = ["", "_oi4-servicediscovery", "_http", "_tcp", "local"]
 
-module.exports.start = function () {
+var config = {
+    hostip: "192.168.0.1",
+    hostport: 8080
+
+}
+
+module.exports.start = function (mam, hostip, hostport) {
+
+    if (typeof hostip === 'string')
+        config.hostip = hostip
+    if (typeof hostport === 'number')
+        config.hostport = hostport
+
+    let txt = [
+        "oi4=true"
+    ]
+
+    Object.keys(mam).forEach(key => {
+        txt.push(key + "=" + JSON.stringify(mam[key]))
+    })
+
     mdns.on('query', function (query) {
         let questions = query.questions
         let addressed = true
@@ -20,7 +40,7 @@ module.exports.start = function () {
                     name: 'Service Discovery Test Application',
                     type: 'SRV',
                     data: {
-                        port: 80,
+                        port: config.hostport,
                         weigth: 0,
                         priority: 10,
                         target: 'localhost'
@@ -29,15 +49,12 @@ module.exports.start = function () {
                     name: '_oi4-servicediscovery._http._tcp.local',
                     type: 'A',
                     ttl: 60,
-                    data: '192.168.1.5'
+                    data: config.hostip
                 }, {
                     name: '_oi4-servicediscovery._http._tcp.local',
                     type: 'TXT',
                     ttl: 60,
-                    data: [
-                        // Put TXT Records in here
-                        "port=90"
-                    ]
+                    data: txt
                 }]
             })
         }

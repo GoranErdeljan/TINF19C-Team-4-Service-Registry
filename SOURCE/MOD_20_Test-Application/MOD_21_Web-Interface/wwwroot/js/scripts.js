@@ -1,15 +1,35 @@
-$.get('/DNSSD/Entries', {}, function(data) {
-    data = JSON.parse(data)
-    console.log(data)
-    data.forEach(element => {
-        console.log(element.answers)
-        element.answers.forEach(answer => {
-            if (answer.type == 'SRV')
-            {                
-                var li = document.createElement("li");
-                li.appendChild(document.createTextNode(answer.name));
-                dnssd_Entries_List.appendChild(li);
-            }
+setInterval(getDNSSDEntries, 60000)
+getDNSSDEntries()
+function getDNSSDEntries() {
+    $.get('/DNSSD/Entries', {}, function (data) {
+        data = JSON.parse(data)
+
+        $("tbody tr").remove()
+
+        data.forEach(entry => {
+            console.log(entry)
+
+            var tr = document.createElement("tr")
+            var td = document.createElement("td")
+            entry.srv.forEach(element => {
+                td.appendChild(document.createTextNode(element + " "))
+            })
+            tr.appendChild(td);
+
+            td = document.createElement("td")
+            entry.a.forEach(element => {
+                td.appendChild(document.createTextNode(element + " "))
+            })
+            tr.appendChild(td);
+
+            td = document.createElement("td")
+            entry.txt.forEach(element => {
+                td.appendChild(document.createTextNode(element))
+                td.appendChild(document.createElement("br"))
+            })
+            tr.appendChild(td);
+
+            dnssd_Entries_List.lastElementChild.appendChild(tr);
         })
     })
-})
+}
