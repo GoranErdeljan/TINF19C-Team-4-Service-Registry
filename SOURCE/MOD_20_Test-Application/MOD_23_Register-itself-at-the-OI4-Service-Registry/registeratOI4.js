@@ -49,9 +49,6 @@ module.exports.start = function (hostname, port) {
                     }
                 }], "d8e7b6df-42ba-448a-975a-199f59e8ffeb"), {}, (err) => {
                     setTimeout(() => {
-                        process.on('exit', () => {});
-                        process.on('SIGINT', () => { });
-                        process.on('SIGTERM', () => { });
                         console.log("Killing now")
                         process.exit()
                     }, 5000)
