@@ -48,6 +48,7 @@ module.exports.start = function (hostname, port) {
                         healthState: 0
                     }
                 }], "d8e7b6df-42ba-448a-975a-199f59e8ffeb"), {}, (err) => {
+                    // Set Timeout -> exiting process after five seconds
                     setTimeout(() => {
                         console.log("Killing now")
                         process.exit()
