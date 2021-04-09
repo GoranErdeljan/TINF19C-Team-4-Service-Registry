@@ -49,6 +49,7 @@ module.exports.start = function (hostname, port) {
                     }
                 }], "d8e7b6df-42ba-448a-975a-199f59e8ffeb"), {}, (err) => {
                     setTimeout(() => {
+                        console.log("Killing now")
                         process.kill(process.pid)
                     }, 5000)
                 })
