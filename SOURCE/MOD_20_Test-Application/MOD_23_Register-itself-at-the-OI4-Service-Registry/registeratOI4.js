@@ -57,6 +57,10 @@ module.exports.start = function (hostname, port) {
                     }, 5000)
                 })
             }
+            else
+            {
+                console.log("Already exiting")
+            }
         }
         process.on('exit', exitHandler.bind());
         process.on('SIGINT', exitHandler.bind());
