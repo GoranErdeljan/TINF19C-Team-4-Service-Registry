@@ -10,20 +10,20 @@ registry.start(undefined, undefined, () => {
         ManufacturerUri: "urn:undefined.com",
         Model: {
             Locale: "de-de",
-            Text: Model
+            Text: Test
         },
-        ProductCode: Productcode,
+        ProductCode: "Test",
         HardwareRevision: "",
         SoftwareRevision: "0.0",
         DeviceRevision: "",
         DeviceManual: "Not available",
-        DeviceClass: DeviceClass,
-        ProductInstanceUri: oi4Identifier,
+        DeviceClass: "Device",
+        ProductInstanceUri: "urn:undefined.com/Test/Test/undefined",
         RevisionCounter: 1,
-        SerialNumber: SerialNumber,
+        SerialNumber: "",
         Description: {
             Locale: "de-de",
-            Text: Model
+            Text: "Test"
         }
     }, Date.now() + 70000)
 })
