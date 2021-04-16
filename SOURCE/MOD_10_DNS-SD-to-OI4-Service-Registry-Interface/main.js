@@ -10,7 +10,7 @@ registry.start(undefined, undefined, () => {
         ManufacturerUri: "urn:undefined.com",
         Model: {
             Locale: "de-de",
-            Text: Test
+            Text: "Test"
         },
         ProductCode: "Test",
         HardwareRevision: "",
