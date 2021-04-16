@@ -2,5 +2,6 @@ var validator = require("./MOD_13_OI4-Conformity-Validator/oi4ConformityValidato
 var registry = require('./MOD_11_DNS-SD-Listener/addtoRegistry')
 
 registry.start(() => {
+    console.log('connected')
     registry.addDevice("urn:undefined.com/Test/Test/undefined", { blabla: 'blabla' }, Date.now() + 70000)
 })
