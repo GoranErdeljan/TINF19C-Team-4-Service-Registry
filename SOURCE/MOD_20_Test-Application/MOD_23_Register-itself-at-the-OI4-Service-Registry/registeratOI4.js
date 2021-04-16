@@ -6,7 +6,7 @@ const SerialNumber = 'undefined'
 const Model = 'DNS_SD_Test_Application'
 const Productcode = 'DNS_SD_TEST'
 const oi4Identifier = 'urn:undefined.com/' + Model + '/' + Productcode + '/' + SerialNumber
-const DeviceClass = 'Aggregation'
+const DeviceClass = 'Registry'
 
 var config = {
     hostname: "localhost",

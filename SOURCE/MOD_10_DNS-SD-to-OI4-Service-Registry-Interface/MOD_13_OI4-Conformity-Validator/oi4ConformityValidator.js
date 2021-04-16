@@ -1,6 +1,7 @@
 module.exports.check = function (txtrecords) {
-    
-
-
-    return true
+    txtrecords.forEach(element => {
+        if (element == "oi4=true")
+            return true  
+    })
+    return false
 }

@@ -1,22 +1,31 @@
 var mdns = require('multicast-dns')();
-const mqtt = require('mqtt');
 
-var mqtt_client = mqtt.connect('mqtt://localhost')
+var callbacks = []
 
-mdns.on('query', function(query)  {
-    //console.log(query);
-    var authorities = query.authorities;
-    var txt_records = [];
-    var srv_records;
-    authorities.forEach(element => {
-        if (element.type == 'TXT')
-            txt_records.push(element.data.toString())
-        if (element.type == 'SRV')
-            srv_records = element.data
-    });
-    console.log('TXT-Records: ')
-    console.log(txt_records);
-    console.log('SRV-Records: ')
-    console.log(srv_records);
-    console.log();
-});
+module.exports.start = function () {
+    setInterval(() => {
+        mdns.query({
+            questions: [{
+                name: '',
+                type: 'A'
+            }]
+        })
+    }, 60000)
+    mdns.query({
+        questions: [{
+            name: '',
+            type: 'A'
+        }]
+    })
+    mdns.on('response', function (query) {
+        console.log("DNS SD Response: ")
+        console.log(query)
+        callbacks.forEach(cb => {
+            cb(query)
+        })
+    })
+}
+
+module.exports.addCallback = function (callback) {
+    callbacks.push(callback)
+}
