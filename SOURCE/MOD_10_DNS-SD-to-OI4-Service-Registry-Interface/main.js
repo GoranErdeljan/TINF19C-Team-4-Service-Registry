@@ -3,4 +3,4 @@ var registry = require('./MOD_11_DNS-SD-Listener/addtoRegistry')
 
 registry.start()
 
-registry.addDevice("", {}, Date.now() + 70000)
+registry.addDevice("urn:undefined.com/Test/Test/undefined", { blabla: 'blabla'}, Date.now() + 70000)
