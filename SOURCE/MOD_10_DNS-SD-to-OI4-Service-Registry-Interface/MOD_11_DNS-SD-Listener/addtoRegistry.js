@@ -108,26 +108,26 @@ module.exports.start = function (hostname = "localhost", port = 1883) {
     })
 }
 
-module.exports.addDevice = function (oi4identifier, mam, ttl = Date.now() + 60000)
+module.exports.addDevice = function (deviceidentifier, mam, ttl = Date.now() + 60000)
 {
-    if (typeof devices[oi4identifier] === 'undefined') {
-        devices[oi4Identifier] = {
+    if (typeof devices[deviceidentifier] === 'undefined') {
+        devices[deviceidentifier] = {
             mam: mam,
-            oi4identifier: oi4identifier,
+            oi4identifier: deviceidentifier,
             ttl: ttl
         }
     }
     else {
-        devices[oi4identifier].mam = mam
-        devices[oi4identifier].ttl = ttl
+        devices[deviceidentifier].mam = mam
+        devices[deviceidentifier].ttl = ttl
     }
 
     client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier,
         buildmsg([{
-            DataSetWriterId: devices[oi4Identifier].oi4Identifier,
+            DataSetWriterId: devices[deviceidentifier].oi4Identifier,
             Timestamp: new Date().toISOString(),
             Status: 0,
-            Payload: devices[oi4Identifier].mam
+            Payload: devices[deviceidentifier].mam
         }],
         '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58'))
 
