@@ -108,15 +108,14 @@ module.exports.start = function (hostname = "localhost", port = 1883) {
     })
 }
 
-module.exports.addDevice = function (oi4identifier, mam, ttl = Date.now() + 60000) {
-    let device = {
-        mam: mam,
-        oi4identifier: oi4identifier,
-        ttl: ttl
-    }
-
+module.exports.addDevice = function (oi4identifier, mam, ttl = Date.now() + 60000)
+{
     if (typeof devices[oi4identifier] === 'undefined') {
-        devices.push(device)
+        devices[oi4Identifier] = {
+            mam: mam,
+            oi4identifier: oi4identifier,
+            ttl: ttl
+        }
     }
     else {
         devices[oi4identifier].mam = mam
