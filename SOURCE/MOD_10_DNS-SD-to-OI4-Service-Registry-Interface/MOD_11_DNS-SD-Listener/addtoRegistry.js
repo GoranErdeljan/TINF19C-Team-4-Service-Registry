@@ -122,12 +122,12 @@ module.exports.addDevice = function (oi4identifier, mam, ttl = Date.now() + 6000
         devices[oi4identifier].ttl = ttl
     }
 
-    client.publish('oi4/' + DeviceClass + '/' + devices[device].oi4Identifier + '/pub/mam/' + oi4Identifier,
+    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier,
         buildmsg([{
             DataSetWriterId: devices[device].oi4Identifier,
             Timestamp: new Date().toISOString(),
             Status: 0,
-            Payload: devices[device].mam
+            Payload: devices[oi4Identifier].mam
         }],
         '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58'))
 
