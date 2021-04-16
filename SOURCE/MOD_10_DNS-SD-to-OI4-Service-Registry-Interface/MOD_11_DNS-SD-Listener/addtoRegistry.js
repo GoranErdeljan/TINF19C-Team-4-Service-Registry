@@ -10,7 +10,7 @@ const Productcode = 'DNS_SD_INTERFACE'
 const oi4Identifier = 'urn:undefined.com/' + Model + '/' + Productcode + '/' + SerialNumber
 const DeviceClass = "Aggregation"
 
-module.exports.start = function (hostname = "localhost", port = 1883) {
+module.exports.start = function (hostname = "localhost", port = 1883, connectcb = () => {}) {
 
     // Connect to MQTT Broker
     client = mqtt.connect([{ host: hostname, port: port }])
@@ -25,6 +25,7 @@ module.exports.start = function (hostname = "localhost", port = 1883) {
         setInterval(() => {
             pubHealth()
         }, 60000)
+        connectcb()
     })
 
     // Handle Messages
