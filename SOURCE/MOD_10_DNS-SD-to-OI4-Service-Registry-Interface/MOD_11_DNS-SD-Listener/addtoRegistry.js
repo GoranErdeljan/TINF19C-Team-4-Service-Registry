@@ -10,7 +10,7 @@ const Productcode = 'DNS_SD_INTERFACE'
 const oi4Identifier = 'urn:undefined.com/' + Model + '/' + Productcode + '/' + SerialNumber
 const DeviceClass = "Aggregation"
 
-module.exports.start = function (hostname = "localhost", port = 1883, connectcb = () => {}) {
+module.exports.start = function (hostname = "localhost", port = 1883, connectcb = () => { }) {
 
     // Connect to MQTT Broker
     client = mqtt.connect([{ host: hostname, port: port }])
@@ -70,41 +70,45 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
                 pubProfile(correlationId)
             }
         }
-        else
-        {
+        else {
             Object.keys(devices).forEach(device => {
-                if (topic.endsWith(devices[device].oi4Identifier))
-                {
-                    if (topic.includes("get/mam"))
-                    {
+                if (topic.endsWith(devices[device].oi4Identifier)) {
+                    if (topic.includes("get/mam")) {
                         console.log("MAM was requested")
                         client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + devices[device].oi4Identifier,
                             buildmsg([{
                                 DataSetWriterId: devices[device].oi4Identifier,
                                 Timestamp: new Date().toISOString(),
                                 Status: 0,
-                                Payload:  devices[device].mam }],
-                            '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58', 
-                            correlationId))
+                                Payload: devices[device].mam
+                            }],
+                                '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58',
+                                correlationId))
                     }
-                    else if (topic.includes("get/health"))
-                    {
+                    else if (topic.includes("get/health")) {
                         client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + devices[device].oi4Identifier,
-                                        buildmsg(devices[device].mam, 
-                                        "d8e7b6df-42ba-448a-975a-199f59e8ffeb",
-                                        correlationId))
+                            buildmsg([{
+                                DataSetWriterId: oi4Identifier,
+                                Timestamp: new Date().toISOString(),
+                                Status: 0,
+                                Payload: {
+                                    health: 'NORMAL_0',
+                                    healthState: 100
+                                }
+                            }],
+                                "d8e7b6df-42ba-448a-975a-199f59e8ffeb",
+                                correlationId))
                     }
-                    else if (topic.includes("get/profile"))
-                    {
+                    else if (topic.includes("get/profile")) {
                         client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + devices[device].oi4Identifier,
-                                buildmsg([{
-                                    DataSetWriterId: oi4Identifier,
-                                    Timestamp: new Date().toISOString(),
-                                    Status: 0,
-                                    Payload: {
-                                        resource: ["health", "mam", "profile"]
-                                    }
-                                }],
+                            buildmsg([{
+                                DataSetWriterId: oi4Identifier,
+                                Timestamp: new Date().toISOString(),
+                                Status: 0,
+                                Payload: {
+                                    resource: ["health", "mam", "profile"]
+                                }
+                            }],
                                 "48017c6a-05c8-48d7-9d85-4b08bbb707f3",
                                 correlationId))
                     }
@@ -118,8 +122,7 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
     })
 }
 
-module.exports.addDevice = function (deviceidentifier, mam, ttl = Date.now() + 60000)
-{
+module.exports.addDevice = function (deviceidentifier, mam, ttl = Date.now() + 60000) {
     if (typeof devices[deviceidentifier] === 'undefined') {
         devices[deviceidentifier] = {
             mam: mam,
@@ -139,7 +142,7 @@ module.exports.addDevice = function (deviceidentifier, mam, ttl = Date.now() + 6
             Status: 0,
             Payload: devices[deviceidentifier].mam
         }],
-        '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58'))
+            '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58'))
 
 }
 
