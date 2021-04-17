@@ -1,9 +1,10 @@
 module.exports.check = function (txtrecords) {
-    txtrecords.forEach(element => {
-        if (element == "oi4=true")
-            return true  
-    })
-    return false
+    if (txtrecords.includes("oi4=true"))
+    {
+        return true
+    }
+    else
+        return false
 }
 
 module.exports.buildmam = function (txtrecords) {
