@@ -123,7 +123,7 @@ module.exports.addDevice = function (deviceidentifier, mam, ttl = Date.now() + 6
     if (typeof devices[deviceidentifier] === 'undefined') {
         devices[deviceidentifier] = {
             mam: mam,
-            oi4identifier: deviceidentifier,
+            oi4Identifier: deviceidentifier,
             ttl: ttl
         }
     }
