@@ -74,7 +74,6 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
             Object.keys(devices).forEach(device => {
                 if (topic.endsWith(devices[device].oi4Identifier)) {
                     if (topic.includes("get/mam")) {
-                        console.log("MAM was requested")
                         client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + devices[device].oi4Identifier,
                             buildmsg([{
                                 DataSetWriterId: devices[device].oi4Identifier,
@@ -86,7 +85,7 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
                                 correlationId))
                     }
                     else if (topic.includes("get/health")) {
-                        client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + devices[device].oi4Identifier,
+                        client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/health/' + devices[device].oi4Identifier,
                             buildmsg([{
                                 DataSetWriterId: oi4Identifier,
                                 Timestamp: new Date().toISOString(),
@@ -100,7 +99,7 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
                                 correlationId))
                     }
                     else if (topic.includes("get/profile")) {
-                        client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + devices[device].oi4Identifier,
+                        client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/profile/' + devices[device].oi4Identifier,
                             buildmsg([{
                                 DataSetWriterId: oi4Identifier,
                                 Timestamp: new Date().toISOString(),
