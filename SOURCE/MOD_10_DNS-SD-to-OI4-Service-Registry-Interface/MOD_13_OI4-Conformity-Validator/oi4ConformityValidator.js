@@ -7,6 +7,7 @@ module.exports.check = function (txtrecords) {
 }
 
 module.exports.buildmam = function (txtrecords) {
+    console.log(txtrecords)
     if (module.exports.check(txtrecords))
     {
         let mam = {}
