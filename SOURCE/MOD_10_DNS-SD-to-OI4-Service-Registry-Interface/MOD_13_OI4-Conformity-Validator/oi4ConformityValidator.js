@@ -14,7 +14,7 @@ module.exports.buildmam = function (txtrecords) {
         let mam = {}
 
         txtrecords.forEach(entry => {
-            let json = entry.slice(entry.indexOf('=') + 1, entry.length - 1)
+            let json = entry.slice(entry.indexOf('=') + 1, entry.length)
             let key = entry.slice(0, entry.indexOf('='))
             if (key !== 'oi4')
             {
