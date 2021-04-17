@@ -39,7 +39,16 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
         else {
             correlationId = JSON.parse(message).MessageId
         }
-        if (topic.endsWith(oi4Identifier)) {
+
+        if (topic.includes("get/publicationList")) // Handle Requests concerning the PublicationList of the Application
+        {
+            pubPublicationList(correlationId)
+        }
+        else if (topic.includes("get/licenseText/GNULGPL")) // Handle Requests concerning specific Licenses
+        {
+            pubLicenseText(correlationId)
+        }
+        else if (topic.endsWith(oi4Identifier)) {
             if (topic.includes('get/mam')) // Handle Requests requesting the Master Asset Model
             {
                 client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage(), '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58', correlationId))
@@ -52,10 +61,6 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
             {
                 pubConfig(correlationId);
             }
-            else if (topic.includes("get/licenseText/GNULGPL")) // Handle Requests concerning specific Licenses
-            {
-                pubLicenseText(correlationId)
-            }
             else if (topic.includes("get/license/")) // Handle Requests concerning the License of the Application
             {
                 pubLicense(correlationId)
@@ -63,10 +68,6 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
             else if (topic.includes("get/profile")) // Handle Requests concerning the Profile of the Application
             {
                 pubProfile(correlationId)
-            }
-            else if (topic.includes("get/publicationList")) // Handle Requests concerning the PublicationList of the Application
-            {
-                pubPublicationList(correlationId)
             }
         }
         else
