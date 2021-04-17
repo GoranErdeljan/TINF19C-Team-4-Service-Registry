@@ -1,5 +1,7 @@
 var validator = require("./MOD_13_OI4-Conformity-Validator/oi4ConformityValidator")
 var registry = require('./MOD_11_DNS-SD-Listener/addtoRegistry')
+var dnssdListener = require('./MOD_11_DNS-SD-Listener/dnssdListener')
+
 
 registry.start(undefined, undefined, () => {
     registry.addDevice("urn:undefined.com/Test/Test/undefined", {
@@ -26,4 +28,21 @@ registry.start(undefined, undefined, () => {
             Text: "Test"
         }
     }, Date.now() + 70000)
+})
+
+
+dnssdListener.start()
+dnssdListener.addCallback((response) => {
+
+    let txtrecords = []
+
+    response.answers.forEach(answer => {
+        if (answer.type == 'TXT') {
+            answer.data.forEach(buffer => {
+                txtrecords.push(buffer.toString())
+            })
+        }
+    })
+    console.log("Found service")
+    console.log(validator.buildmam(txtrecords))
 })

@@ -5,3 +5,23 @@ module.exports.check = function (txtrecords) {
     })
     return false
 }
+
+module.exports.buildmam = function (txtrecords) {
+    if (module.exports.check(txtrecords))
+    {
+        let mam = {
+
+        }
+        txtrecords.forEach(entry => {
+            let json = entry.slice(entry.indexOf('='), entry.length - 1)
+            let key = entry.slice(0, entry.indexOf('='))
+            if (key !== 'oi4')
+            {
+                mam[key] = JSON.parse(json)
+            }
+        })
+        return mam
+    }
+    else
+        return undefined
+}
