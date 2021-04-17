@@ -39,7 +39,7 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
         else {
             correlationId = JSON.parse(message).MessageId
         }
-        if (topic.includes(oi4Identifier)) {
+        if (topic.endsWith(oi4Identifier)) {
             if (topic.includes('get/mam')) // Handle Requests requesting the Master Asset Model
             {
                 client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage(), '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58', correlationId))
