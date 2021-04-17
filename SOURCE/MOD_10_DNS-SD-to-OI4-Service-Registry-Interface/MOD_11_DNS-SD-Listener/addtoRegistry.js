@@ -78,7 +78,7 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
                     if (topic.includes("get/mam"))
                     {
                         console.log("MAM was requested")
-                        client.publish('oi4/Device/' + devices[device].oi4Identifier + '/pub/mam/' + oi4Identifier, 
+                        client.publish('oi4/Device/' + oi4Identifier + '/pub/mam/' + devices[device].oi4Identifier,
                             buildmsg([{
                                 DataSetWriterId: devices[device].oi4Identifier,
                                 Timestamp: new Date().toISOString(),
@@ -89,14 +89,14 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
                     }
                     else if (topic.includes("get/health"))
                     {
-                        client.publish('oi4/Device/' + devices[device].oi4Identifier + '/pub/mam/' + oi4Identifier,
+                        client.publish('oi4/Device/' + oi4Identifier + '/pub/mam/' + devices[device].oi4Identifier,
                                         buildmsg(devices[device].mam, 
                                         "d8e7b6df-42ba-448a-975a-199f59e8ffeb",
                                         correlationId))
                     }
                     else if (topic.includes("get/profile"))
                     {
-                        client.publish('oi4/Device/' + devices[device].oi4Identifier + '/pub/mam/' + oi4Identifier,
+                        client.publish('oi4/Device/' + oi4Identifier + '/pub/mam/' + devices[device].oi4Identifier,
                                 buildmsg([{
                                     DataSetWriterId: oi4Identifier,
                                     Timestamp: new Date().toISOString(),
