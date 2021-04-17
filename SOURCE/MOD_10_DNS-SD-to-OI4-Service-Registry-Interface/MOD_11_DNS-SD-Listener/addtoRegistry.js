@@ -73,7 +73,7 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
         else
         {
             Object.keys(devices).forEach(device => {
-                if (topic.includes(devices[device].oi4Identifier))
+                if (topic.endsWith(devices[device].oi4Identifier))
                 {
                     if (topic.includes("get/mam"))
                     {
