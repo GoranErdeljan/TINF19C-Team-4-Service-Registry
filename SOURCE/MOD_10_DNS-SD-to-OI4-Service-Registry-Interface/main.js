@@ -43,6 +43,10 @@ dnssdListener.addCallback((response) => {
             })
         }
     })
+
+    let mam = validator.buildmam(txtrecords)
+
     console.log("Found service")
-    console.log(validator.buildmam(txtrecords))
+    console.log(mam)
+    registry.addDevice(mam.ProductInstanceUri, mam)
 })
