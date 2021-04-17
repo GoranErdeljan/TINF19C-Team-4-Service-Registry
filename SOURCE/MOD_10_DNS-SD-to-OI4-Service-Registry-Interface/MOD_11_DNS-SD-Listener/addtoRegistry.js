@@ -96,9 +96,16 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
                     else if (topic.includes("get/profile"))
                     {
                         client.publish('oi4/Device/' + devices[device].oi4Identifier + '/pub/mam/' + oi4Identifier,
-                                        buildmsg(devices[device].mam,
-                                        "48017c6a-05c8-48d7-9d85-4b08bbb707f3",
-                                        correlationId))
+                                buildmsg([{
+                                    DataSetWriterId: oi4Identifier,
+                                    Timestamp: new Date().toISOString(),
+                                    Status: 0,
+                                    Payload: {
+                                        resource: ["health", "mam", "profile"]
+                                    }
+                                }],
+                                "48017c6a-05c8-48d7-9d85-4b08bbb707f3",
+                                correlationId))
                     }
                 }
             })
