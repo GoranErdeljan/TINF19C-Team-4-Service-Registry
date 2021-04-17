@@ -75,6 +75,7 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
             Object.keys(devices).forEach(device => {
                 if (topic.endsWith(devices[device].oi4Identifier))
                 {
+                    console.log(devices[device].oi4Identifier + " was addressed")
                     if (topic.includes("get/mam"))
                     {
                         client.publish('oi4/Device/' + devices[device].oi4Identifier + '/pub/mam/' + oi4Identifier, 
