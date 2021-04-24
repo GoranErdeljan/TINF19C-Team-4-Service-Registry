@@ -6,7 +6,9 @@ var oi4Listener = require("./MOD_12_OI4-Service-Registry-listener/oi4Listener.js
 registry.start(undefined, undefined, () => {
 })
 
-oi4Listener.start()
+oi4Listener.start(undefined, undefined, () => {
+    console.log("Connected")
+})
 
 dnssdListener.start()
 dnssdListener.addCallback((response) => {

@@ -8,6 +8,7 @@ module.exports.start = (hostname = "localhost", port = 1883, connectcb = () => {
     client.on("connect", () => {
         connectcb()
         client.subscribe("oi4/urn:hilscher.com/Registry%20Application/OI4-REG/undefined/#", (err) => {
+            
             console.error(err)
         })
     })
