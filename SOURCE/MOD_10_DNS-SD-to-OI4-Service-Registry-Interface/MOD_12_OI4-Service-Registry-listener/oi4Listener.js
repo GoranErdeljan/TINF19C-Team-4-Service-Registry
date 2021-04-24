@@ -87,6 +87,9 @@ module.exports.start = ( connectcb = () => { }) => {
             })
         }
     })
+    setInterval(() => {
+        getHealthOfDevices()
+    }, 60000);
 }
 
 function getHealthOfDevices() {
