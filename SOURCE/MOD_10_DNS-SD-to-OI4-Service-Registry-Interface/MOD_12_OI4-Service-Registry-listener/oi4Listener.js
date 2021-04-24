@@ -101,6 +101,7 @@ function getHealthOfDevices() {
     })
     tempMqttClient.on('connect', () => {
         Object.keys(mams).forEach(key => {
+            // TODO: Fix Health requests
             tempMqttClient.publish("oi4/" + mams[key].PublisherId
                 + "/get/health/" + mams[key].ProductInstanceUri, JSON.stringify({
                         MessageId: Date.now() 
@@ -131,7 +132,7 @@ function getHealthOfDevices() {
             if (topic.includes(mams[key].PublisherId) 
                 && topic.includes(mams[key].mam.ProductInstanceUri))
             {
-                console.log(mams[key].mam.ProductInstanceUri + "is ok")
+                console.log(mams[key].mam.ProductInstanceUri + " is ok")
                 let index = statusUnknown.indexOf(mams[key].mam.ProductInstanceUri)
                 statusUnknown.splice(index, 1)
             }
