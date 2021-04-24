@@ -126,6 +126,8 @@ function getHealthOfDevices() {
     })
     tempMqttClient.on("message", (topic, message) => {
         statusUnknown.forEach(key => {
+            console.log("Got Health message from: ")
+            console.log(mams[key])
             if (topic.includes(mams[key].PublisherId) 
                 && topic.includes(mams[key].mam.ProductInstanceUri))
             {
