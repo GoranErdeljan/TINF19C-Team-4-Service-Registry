@@ -44,6 +44,8 @@ module.exports.start = ( connectcb = () => { }) => {
         messageobject.Messages.forEach(innerMessage => {
             mams[innerMessage.ProductInstanceUri] = { mam: innerMessage.Payload, PublisherId: messageobject.PublisherId }
             console.log("MAM-Listener added: " + innerMessage.Payload.ProductInstanceUri)
+            console.log("MAMs are now: ")
+            console.log(mams)
             console.log()
         })
     })
