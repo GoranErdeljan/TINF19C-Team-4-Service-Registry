@@ -123,6 +123,7 @@ function getHealthOfDevices() {
             if (topic.includes(mams[key].PublisherId) 
                 && topic.includes(mams[key].mam.ProductInstanceUri))
             {
+                console.log(mams[key].mam.ProductInstanceUri + "is ok")
                 let index = statusUnknown.indexOf(mams[key].mam.ProductInstanceUri)
                 statusUnknown.splice(index, 1)
             }
