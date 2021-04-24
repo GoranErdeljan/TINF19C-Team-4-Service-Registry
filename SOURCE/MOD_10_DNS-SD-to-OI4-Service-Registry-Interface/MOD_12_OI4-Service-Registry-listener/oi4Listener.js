@@ -94,7 +94,7 @@ module.exports.start = ( connectcb = () => { }) => {
 function getHealthOfDevices() {
     let statusUnknown = Object.keys(mams)
     let tempMqttClient = mqtt.connect([{ host: config.mqtthost, port: config.mqttport }])
-    tempMqttClient.subscribe("oi4/+/+/+/+/+/pub/health/" + mams[key].mam.ProductInstanceUri, (err) => {
+    tempMqttClient.subscribe("oi4/+/+/+/+/+/pub/health/#", (err) => {
         console.error(err)
     })
     tempMqttClient.on('connect', () => {
