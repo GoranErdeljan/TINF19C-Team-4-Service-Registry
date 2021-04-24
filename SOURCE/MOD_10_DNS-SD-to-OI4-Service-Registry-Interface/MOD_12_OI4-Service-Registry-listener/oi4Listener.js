@@ -1,6 +1,5 @@
 var mqtt = require("mqtt")
-var mdns = require("multicast-dns")
-const { mam } = require("../MOD_11_DNS-SD-Listener/addtoRegistry")
+var mdns = require("multicast-dns")()
 
 const typeArray = ["", "_oi4-servicediscovery", "_http", "_tcp", "local"]
 
