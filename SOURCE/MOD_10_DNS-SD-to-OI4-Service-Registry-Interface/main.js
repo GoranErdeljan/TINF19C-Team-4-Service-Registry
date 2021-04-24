@@ -3,10 +3,20 @@ var registry = require('./MOD_11_DNS-SD-Listener/addtoRegistry')
 var dnssdListener = require('./MOD_11_DNS-SD-Listener/dnssdListener')
 var oi4Listener = require("./MOD_12_OI4-Service-Registry-listener/oi4Listener.js")
 
+var config = {
+    hostport: 8080,
+    hostip: "192.168.0.1",
+    mqtthost: "localhost",
+    mqttport:  "1883"
+}
+
 registry.start(undefined, undefined, () => {
 })
 
-oi4Listener.start(undefined, undefined, () => {
+
+oi4Listener.setConfig(config)
+oi4Listener.setValidator(validator)
+oi4Listener.start(() => {
     console.log("Connected")
 })
 
