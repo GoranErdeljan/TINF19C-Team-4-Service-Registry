@@ -7,7 +7,7 @@ module.exports.start = (hostname = "localhost", port = 1883, connectcb = () => {
     client = mqtt.connect([{ host: hostname, port: port }])
     client.on("connect", () => {
         connectcb()
-        client.subscribe("oi4/Registry/urn:hilscher.com/Registry%20Application/OI4-REG/undefined/#", (err) => {
+        client.subscribe("oi4/+/+/+/+/+/pub/mam/#", (err) => {
             console.log("Subscribed")
             console.error(err)
         })
@@ -16,7 +16,7 @@ module.exports.start = (hostname = "localhost", port = 1883, connectcb = () => {
         console.error(error)
     })
     client.on("message", (topic, message) => {
-        console.log("Registry-Listener got: " + topic)
+        console.log("MAM-Listener got: " + topic)
         console.log(message.toString("ascii"))
         console.log()
     })
