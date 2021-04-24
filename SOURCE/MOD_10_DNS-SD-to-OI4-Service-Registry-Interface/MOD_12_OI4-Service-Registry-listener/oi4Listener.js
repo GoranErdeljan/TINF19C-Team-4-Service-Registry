@@ -19,11 +19,11 @@ module.exports.setValidator = function (setValidator) {
     validator = setValidator
 }
 module.exports.start = ( connectcb = () => { }) => {
-    if (typeof validator !== 'undefined') {
+    if (typeof validator === 'undefined') {
         console.error("No Validator specified")
         return
     }
-    if (typeof config !== 'undefined') {
+    if (typeof config === 'undefined') {
         console.error("No config specified")
         return
     }
