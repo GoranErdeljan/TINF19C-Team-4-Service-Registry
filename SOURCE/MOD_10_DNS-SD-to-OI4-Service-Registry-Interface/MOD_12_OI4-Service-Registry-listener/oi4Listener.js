@@ -18,5 +18,6 @@ module.exports.start = (hostname = "localhost", port = 1883, connectcb = () => {
     client.on("message", (topic, message) => {
         console.log("Registry-Listener got: " + topic)
         console.log(message.toString("ascii"))
+        console.log()
     })
 }
