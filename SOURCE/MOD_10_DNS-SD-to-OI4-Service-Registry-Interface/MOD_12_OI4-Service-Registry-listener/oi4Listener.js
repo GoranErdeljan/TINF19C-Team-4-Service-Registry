@@ -95,13 +95,13 @@ function getHealthOfDevices() {
     let statusUnknown = Object.keys(mams)
     let tempMqttClient = mqtt.connect([{ host: config.mqtthost, port: config.mqttport }])
     tempMqttClient.on('connect', () => {
-        mams.forEach(mam => {
-            tempMqttClient.subscribe("oi4/" + mam.PublisherId 
-                                    + "/pub/health/" + mam.ProductInstanceUri, (err) => {
+        Object.keys(mams).forEach(key => {
+            tempMqttClient.subscribe("oi4/" + mams[keys].PublisherId 
+                                    + "/pub/health/" + mams[key].mam.ProductInstanceUri, (err) => {
                 console.error(err)
             })
-            tempMqttClient.publish("oi4/" + mam.PublisherId
-                + "/get/health/" + mam.ProductInstanceUri, JSON.stringify({ 
+            tempMqttClient.publish("oi4/" + mams[key].PublisherId
+                + "/get/health/" + mams[key].ProductInstanceUri, JSON.stringify({
                         MessageId: Date.now() 
                                     + "-" + config.oi4.DeviceClass 
                                     + "/" + config.oi4.oi4Identifier,
