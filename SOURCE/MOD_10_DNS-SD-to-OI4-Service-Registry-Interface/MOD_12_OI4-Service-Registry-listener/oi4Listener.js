@@ -1,6 +1,8 @@
 var mqtt = require("mqtt")
 var mdns = require("multicast-dns")
 
+var client
+
 module.exports.start = (hostname = "localhost", port = 1883, connectcb = () => { }) => {
-    mqtt.connect()
+    client = mqtt.connect([{ host: hostname, port: port }])
 }
