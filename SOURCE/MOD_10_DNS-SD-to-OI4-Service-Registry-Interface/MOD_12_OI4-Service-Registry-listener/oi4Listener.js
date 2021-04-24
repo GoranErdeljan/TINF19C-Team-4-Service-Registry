@@ -38,13 +38,12 @@ module.exports.start = ( connectcb = () => { }) => {
         console.error(error)
     })
     client.on("message", (topic, message) => {
-        console.log("MAM-Listener got: " + topic)
-        console.log(message.toString("ascii"))
-        console.log()
         // Add MAM to mams
         // TODO: Add checks for undefined values
-        JSON.parse(message).Messages.forEach(innerMessage => {
-            mams[innerMessage.ProductInstanceUri] = { mam: innerMessage.Payload, PublisherId: JSON.parse(message).PublisherId }
+        let messageobject = JSON.parse(message)
+        messageobject.Messages.forEach(innerMessage => {
+            mams[innerMessage.ProductInstanceUri] = { mam: innerMessage.Payload, PublisherId: messageobject.PublisherId }
+            console.log("MAM-Listener added: " + innerMessage.Payload.ProductInstanceUri)
         })
     })
     mdns.on('query', (query) => {
