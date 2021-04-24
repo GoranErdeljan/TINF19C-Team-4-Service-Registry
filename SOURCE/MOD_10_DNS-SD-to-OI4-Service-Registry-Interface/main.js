@@ -7,7 +7,14 @@ var config = {
     hostport: 8080,
     hostip: "192.168.0.1",
     mqtthost: "localhost",
-    mqttport:  "1883"
+    mqttport:  "1883",
+    oi4: {
+        SerialNumber = 'undefined',
+        Model = 'DNS_SD_INTERFACE',
+        Productcode = 'DNS_SD_INTERFACE',
+        oi4Identifier = 'urn:undefined.com/' + config.oi4.Model + '/' + config.oi4.Productcode + '/' + config.oi4.SerialNumber,
+        DeviceClass = "Aggregation"
+    }
 }
 
 registry.start(undefined, undefined, () => {

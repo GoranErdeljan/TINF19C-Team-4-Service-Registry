@@ -1,9 +1,10 @@
 var mqtt = require("mqtt")
 var mdns = require("multicast-dns")
+const { mam } = require("../MOD_11_DNS-SD-Listener/addtoRegistry")
 
 const typeArray = ["", "_oi4-servicediscovery", "_http", "_tcp", "local"]
 
-var mams = []
+var mams = {}
 
 var client
 
@@ -42,7 +43,10 @@ module.exports.start = ( connectcb = () => { }) => {
         console.log(message.toString("ascii"))
         console.log()
         // Add MAM to mams
-
+        // TODO: Add checks for undefined values
+        JSON.parse(message).Messages.forEach(innerMessage => {
+            mams[innerMessage.ProductInstanceUri] = { mam: innerMessage.Payload, PublisherId: JSON.parse(message).PublisherId }
+        })
     })
     mdns.on('query', (query) => {
         let questions = query.questions
@@ -77,7 +81,7 @@ module.exports.start = ( connectcb = () => { }) => {
                         name: '_oi4-servicediscovery._http._tcp.local',
                         type: 'TXT',
                         ttl: 60,
-                        data: buildTXTOfMAM(mam)
+                        data: buildTXTOfMAM(mam.mam)
                     }]
                 })
             })
@@ -86,9 +90,47 @@ module.exports.start = ( connectcb = () => { }) => {
 }
 
 function getHealthOfDevices() {
-    mams.forEach(mam => {
-        // Check Health of Application and update list of mams accordingly
+    let statusUnknown = Object.keys(mams)
+    let tempMqttClient = mqtt.connect([{ host: config.mqtthost, port: config.mqttport }])
+    tempMqttClient.on('connect', () => {
+        mams.forEach(mam => {
+            tempMqttClient.subscribe("oi4/" + mam.PublisherId 
+                                    + "/pub/health/" + mam.ProductInstanceUri, (err) => {
+                console.error(err)
+            })
+            tempMqttClient.publish("oi4/" + mam.PublisherId
+                + "/get/health/" + mam.ProductInstanceUri, JSON.stringify({ 
+                        MessageId: Date.now() 
+                                    + "-" + config.oi4.DeviceClass 
+                                    + "/" + config.oi4.oi4Identifier,
+                        MessageType: "ua-data", 
+                        DataSetClassId: "d8e7b6df-42ba-448a-975a-199f59e8ffeb",
+                        PublisherId: config.oi4.DeviceClass + "/" + config.oi4.oi4Identifier, 
+                        Messages: [{ 
+                            DataSetWriterId: config.oi4.oi4Identifier,
+                            Timestamp: new Date().toISOString(), 
+                            Status: 0, 
+                            Payload: {} }], 
+                        CorrelationId: "" }))
+            // Check Health of Application and update list of mams accordingly
+        })
     })
+    tempMqttClient.on("message", (topic, message) => {
+        statusUnknown.forEach(key => {
+            if (topic.includes(mams[key].PublisherId) 
+                && topic.includes(mams[key].mam.ProductInstanceUri))
+            {
+                let index = statusUnknown.indexOf(mams[key].mam.ProductInstanceUri)
+                statusUnknown.splice(index, 1)
+            }
+        })
+    })
+    setTimeout(() => {
+        delete tempMqttClient
+        statusUnknown.forEach(oi4Identifier => {
+            delete mams[oi4Identifier]
+        })
+    }, 10000)
 }
 
 function buildTXTOfMAM (mam) {
