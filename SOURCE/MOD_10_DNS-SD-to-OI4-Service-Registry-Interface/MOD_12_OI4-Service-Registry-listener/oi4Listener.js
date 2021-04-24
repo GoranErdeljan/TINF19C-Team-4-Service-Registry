@@ -120,7 +120,7 @@ function getHealthOfDevices() {
             statusUnknown.forEach(oi4Identifier => {
                 delete mams[oi4Identifier]
             })
-        }, 10000)
+        }, 60000)
     })
     tempMqttClient.on("message", (topic, message) => {
         statusUnknown.forEach(key => {
