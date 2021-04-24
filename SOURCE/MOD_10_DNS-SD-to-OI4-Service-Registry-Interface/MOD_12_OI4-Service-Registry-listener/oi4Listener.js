@@ -59,7 +59,7 @@ module.exports.start = ( connectcb = () => { }) => {
         })
         if (addressed) {
             console.log("Service was addressed, sending mdns response")
-            mams.forEach(mam => {
+            Object.keys(mams).forEach(key => {
 
                 mdns.respond({
                     answers: [{
@@ -80,7 +80,7 @@ module.exports.start = ( connectcb = () => { }) => {
                         name: '_oi4-servicediscovery._http._tcp.local',
                         type: 'TXT',
                         ttl: 60,
-                        data: buildTXTOfMAM(mam.mam)
+                        data: buildTXTOfMAM(mams[key].mam)
                     }]
                 })
             })
