@@ -42,7 +42,7 @@ module.exports.start = ( connectcb = () => { }) => {
         // TODO: Add checks for undefined values
         let messageobject = JSON.parse(message)
         messageobject.Messages.forEach(innerMessage => {
-            mams[innerMessage.ProductInstanceUri] = { mam: innerMessage.Payload, PublisherId: messageobject.PublisherId }
+            mams[innerMessage.Payload.ProductInstanceUri] = { mam: innerMessage.Payload, PublisherId: messageobject.PublisherId }
             console.log("MAM-Listener added: " + innerMessage.Payload.ProductInstanceUri)
             console.log("MAMs are now: ")
             console.log(mams)
