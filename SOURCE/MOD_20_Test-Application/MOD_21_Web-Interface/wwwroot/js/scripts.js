@@ -1,4 +1,4 @@
-setInterval(getDNSSDEntries, 60000)
+setInterval(getDNSSDEntries, 10000)
 getDNSSDEntries()
 function getDNSSDEntries() {
     $.get('/DNSSD/Entries', {}, function (data) {

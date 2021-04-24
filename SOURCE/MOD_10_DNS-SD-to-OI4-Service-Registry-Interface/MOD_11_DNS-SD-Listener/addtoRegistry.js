@@ -10,6 +10,8 @@ const Productcode = 'DNS_SD_INTERFACE'
 const oi4Identifier = 'urn:undefined.com/' + Model + '/' + Productcode + '/' + SerialNumber
 const DeviceClass = "Aggregation"
 
+var client
+
 module.exports.start = function (hostname = "localhost", port = 1883, connectcb = () => { }) {
 
     // Connect to MQTT Broker
