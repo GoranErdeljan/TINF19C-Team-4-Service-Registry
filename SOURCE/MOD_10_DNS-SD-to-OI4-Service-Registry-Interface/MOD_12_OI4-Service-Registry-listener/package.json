@@ -1,0 +1,15 @@
+{
+  "name": "mod_12_oi4-service-registry-listener",
+  "version": "1.0.0",
+  "description": "",
+  "main": "oi4Listener.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mqtt": "^4.2.6",
+    "multicast-dns": "^7.2.2"
+  }
+}
