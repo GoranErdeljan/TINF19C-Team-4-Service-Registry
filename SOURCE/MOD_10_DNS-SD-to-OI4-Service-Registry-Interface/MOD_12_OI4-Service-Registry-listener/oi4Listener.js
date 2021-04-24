@@ -116,6 +116,12 @@ function getHealthOfDevices() {
                         CorrelationId: "" }))
             // Check Health of Application and update list of mams accordingly
         })
+        setTimeout(() => {
+            delete tempMqttClient
+            statusUnknown.forEach(oi4Identifier => {
+                delete mams[oi4Identifier]
+            })
+        }, 10000)
     })
     tempMqttClient.on("message", (topic, message) => {
         statusUnknown.forEach(key => {
@@ -128,12 +134,6 @@ function getHealthOfDevices() {
             }
         })
     })
-    setTimeout(() => {
-        delete tempMqttClient
-        statusUnknown.forEach(oi4Identifier => {
-            delete mams[oi4Identifier]
-        })
-    }, 10000)
 }
 
 function buildTXTOfMAM (mam) {
