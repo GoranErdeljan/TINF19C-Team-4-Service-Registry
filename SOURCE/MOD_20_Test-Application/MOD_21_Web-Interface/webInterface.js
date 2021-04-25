@@ -21,6 +21,14 @@ module.exports.start = function (port) {
     app.listen(config.port, () => {
         console.log("Server running on " + config.port + " ...")
     })
+    setInterval(() => {
+        dnssdEntries.forEach(entry => {
+            if (entry.ttl < Date.now())
+            {
+                dnssdEntries.splice(dnssdEntries.indexOf(entry), 1)
+            }
+        })
+    }, 10000);
 }
 
 module.exports.emptyDNS_SDEntries = function () {
@@ -32,7 +40,8 @@ module.exports.addDNS_SDEntry = function (entry) {
     let object = {
         srv: [],
         a: [],
-        txt: []
+        txt: [],
+        ttl: Date.now()
     }
 
     entry.answers.forEach(answer => {
@@ -46,6 +55,7 @@ module.exports.addDNS_SDEntry = function (entry) {
             answer.data.forEach(buffer => {
                 object.txt.push(buffer.toString())
             })
+            object.ttl = Date.now() + answer.ttl
         }
     })
     let exists = false
