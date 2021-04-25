@@ -78,12 +78,12 @@ module.exports.start = (connectcb = () => { }) => {
                             target: 'localhost'
                         }
                     }, {
-                        name: mams[key].mam.ProductInstanceUri + '._oi4-servicediscovery._http._tcp.local',
+                        name: mams[key].mam.ProductInstanceUri + '._oi4-servicediscovery._http._tcp',
                         type: 'A',
                         ttl: 60,
                         data: config.hostip
                     }, {
-                        name: mams[key].mam.ProductInstanceUri + '._oi4-servicediscovery._http._tcp.local',
+                        name: mams[key].mam.ProductInstanceUri + '._oi4-servicediscovery._http._tcp',
                         type: 'TXT',
                         ttl: 60,
                         data: buildTXTOfMAM(mams[key].mam)
