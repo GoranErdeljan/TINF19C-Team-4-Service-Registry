@@ -40,9 +40,11 @@ module.exports.start = (connectcb = () => { }) => {
     client.on("message", (topic, message) => {
         // Add MAM to mams
         // TODO: Add checks for undefined values
+        
         console.log("Got MAM")
         console.log(message.toString("ascii"))
         let messageobject = JSON.parse(message)
+        if (messageobject.PublisherId !== config.DeviceClass + "/" + config.oi4Identifier)
         messageobject.Messages.forEach(innerMessage => {
             mams[innerMessage.Payload.ProductInstanceUri] = { mam: innerMessage.Payload, PublisherId: messageobject.PublisherId }
             console.log("MAM-Listener added: " + innerMessage.Payload.ProductInstanceUri)
@@ -138,14 +140,12 @@ function getHealthOfDevices() {
             if (waiting) {
                 console.log("Got Health message from: ")
                 console.log(mams[key])
-                console.log(statusUnknown)
                 if (topic.includes(mams[key].PublisherId)
                     && topic.includes(mams[key].mam.ProductInstanceUri)) {
                     console.log(mams[key].mam.ProductInstanceUri + " is ok")
                     let index = statusUnknown.indexOf(mams[key].mam.ProductInstanceUri)
                     statusUnknown.splice(index, 1)
                 }
-                console.log(statusUnknown)
             }
         })
     })
