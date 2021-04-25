@@ -28,7 +28,10 @@ module.exports.start = function (port) {
                 dnssdEntries.splice(dnssdEntries.indexOf(entry), 1)
             }
         })
-    }, 10000);
+    }, 10000)
+    setInterval(() => {
+        console.log("[webInterface] Current Entrie are: " + JSON.stringify(dnssdEntries))
+    }, 60000);
 }
 
 module.exports.emptyDNS_SDEntries = function () {
