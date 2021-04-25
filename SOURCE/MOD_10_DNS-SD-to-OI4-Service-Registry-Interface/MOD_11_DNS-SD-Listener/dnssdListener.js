@@ -18,8 +18,6 @@ module.exports.start = function () {
         }]
     })
     mdns.on('response', function (query) {
-        console.log("DNS SD Response: ")
-        console.log(query)
         callbacks.forEach(cb => {
             cb(query)
         })

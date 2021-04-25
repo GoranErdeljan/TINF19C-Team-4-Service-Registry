@@ -19,23 +19,23 @@ module.exports.setValidator = function (setValidator) {
 }
 module.exports.start = (connectcb = () => { }) => {
     if (typeof validator === 'undefined') {
-        console.error("No Validator specified")
+        console.error("[oi4Listener] No Validator specified")
         return
     }
     if (typeof config === 'undefined') {
-        console.error("No config specified")
+        console.error("[oi4Listener] No config specified")
         return
     }
     client = mqtt.connect([{ host: config.mqtthost, port: config.mqttport }])
     client.on("connect", () => {
         connectcb()
         client.subscribe("oi4/+/+/+/+/+/pub/mam/#", (err) => {
-            console.log("Subscribed")
+            console.log("[oi4Listener] Subscribed to 'oi4/+/+/+/+/+/pub/mam/#'")
             console.error(err)
         })
     })
     client.on("error", (error) => {
-        console.error(error)
+        console.error("[oi4Listener] " + error)
     })
     client.on("message", (topic, message) => {
         // Add MAM to mams
@@ -44,8 +44,8 @@ module.exports.start = (connectcb = () => { }) => {
         if (messageobject.PublisherId !== config.oi4.DeviceClass + "/" + config.oi4.oi4Identifier) {
             messageobject.Messages.forEach(innerMessage => {
                 mams[innerMessage.Payload.ProductInstanceUri] = { mam: innerMessage.Payload, PublisherId: messageobject.PublisherId }
-                console.log("MAM-Listener added: " + innerMessage.Payload.ProductInstanceUri)
-                console.log("MAMs are now: ")
+                console.log("[oi4Listener] MAM-Listener added: " + innerMessage.Payload.ProductInstanceUri)
+                console.log("[oi4Listener] MAMs are now: ")
                 console.log(Object.keys(mams))
                 console.log()
             })
@@ -62,7 +62,7 @@ module.exports.start = (connectcb = () => { }) => {
             })
         })
         if (addressed) {
-            console.log("Service was addressed, sending mdns response")
+            console.log("[oi4Listener] Service was addressed, sending mdns response")
             Object.keys(mams).forEach(key => {
 
                 mdns.respond({
@@ -100,11 +100,11 @@ function getHealthOfDevices() {
     let waiting = true
     let tempMqttClient = mqtt.connect([{ host: config.mqtthost, port: config.mqttport }])
     tempMqttClient.subscribe("oi4/+/+/+/+/+/pub/health/#", (err) => {
-        console.error(err)
+        console.error("[oi4Listener] " + err)
     })
     tempMqttClient.on('connect', () => {
         Object.keys(mams).forEach(key => {
-            console.log("Requesting health from " + key)
+            console.log("[oi4Listener] Requesting health from " + key)
             // TODO: Fix Health requests
             tempMqttClient.publish("oi4/" + mams[key].PublisherId
                 + "/get/health/" + mams[key].ProductInstanceUri, JSON.stringify({
@@ -125,7 +125,7 @@ function getHealthOfDevices() {
             // Check Health of Application and update list of mams accordingly
         })
         setTimeout(() => {
-            console.log("Stop waiting for Health messages, removing: ")
+            console.log("[oi4Listener] Stop waiting for Health messages, removing: ")
             waiting = false
             delete tempMqttClient
             statusUnknown.forEach(oi4Identifier => {
@@ -137,11 +137,11 @@ function getHealthOfDevices() {
     tempMqttClient.on("message", (topic, message) => {
         statusUnknown.forEach(key => {
             if (waiting) {
-                console.log("Got Health message from: ")
+                console.log("[oi4Listener] Got Health message from: ")
                 console.log(mams[key])
                 if (topic.includes(mams[key].PublisherId)
                     && topic.includes(mams[key].mam.ProductInstanceUri)) {
-                    console.log(mams[key].mam.ProductInstanceUri + " is ok")
+                    console.log("[oi4Listener] " + mams[key].mam.ProductInstanceUri + " is ok")
                     let index = statusUnknown.indexOf(mams[key].mam.ProductInstanceUri)
                     statusUnknown.splice(index, 1)
                 }
