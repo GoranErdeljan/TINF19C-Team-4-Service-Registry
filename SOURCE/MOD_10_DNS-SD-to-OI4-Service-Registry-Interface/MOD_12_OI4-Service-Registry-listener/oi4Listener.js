@@ -31,7 +31,8 @@ module.exports.start = (connectcb = () => { }) => {
         connectcb()
         client.subscribe("oi4/+/+/+/+/+/pub/mam/#", (err) => {
             console.log("[oi4Listener] Subscribed to 'oi4/+/+/+/+/+/pub/mam/#'")
-            console.error(err)
+            if (err)
+                console.error(err)
         })
     })
     client.on("error", (error) => {
