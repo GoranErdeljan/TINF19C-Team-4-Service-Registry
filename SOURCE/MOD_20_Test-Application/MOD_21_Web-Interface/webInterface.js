@@ -52,6 +52,10 @@ module.exports.addDNS_SDEntry = function (entry) {
 
     dnssdEntries.forEach(element => {
         let same = true
+        element.srv.forEach(srv => {
+            if (!object.srv.includes(srv))
+                same = false
+        })
         element.txt.forEach(record => {
             if (!object.txt.includes(record))
                 same = false
