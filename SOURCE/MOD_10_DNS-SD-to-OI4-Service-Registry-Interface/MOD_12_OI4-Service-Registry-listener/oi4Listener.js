@@ -64,7 +64,7 @@ module.exports.start = (connectcb = () => { }) => {
             })
         })
         if (addressed) {
-            console.log("[oi4Listener] Service was addressed, sending mdns response")
+            console.log("[oi4Listener] Service was addressed, sending mdns responses \n")
             Object.keys(mams).forEach(key => {
 
                 mdns.respond({
@@ -106,27 +106,6 @@ function getHealthOfDevices() {
             console.error("[oi4Listener] " + err)
     })
     tempMqttClient.on('connect', () => {
-        Object.keys(mams).forEach(key => {
-            console.log("[oi4Listener] Requesting health from " + key)
-            // TODO: Fix Health requests
-            tempMqttClient.publish("oi4/" + mams[key].PublisherId
-                + "/get/health/" + mams[key].ProductInstanceUri, JSON.stringify({
-                    MessageId: Date.now()
-                        + "-" + config.oi4.DeviceClass
-                        + "/" + config.oi4.oi4Identifier,
-                    MessageType: "ua-data",
-                    DataSetClassId: "d8e7b6df-42ba-448a-975a-199f59e8ffeb",
-                    PublisherId: config.oi4.DeviceClass + "/" + config.oi4.oi4Identifier,
-                    Messages: [{
-                        DataSetWriterId: config.oi4.oi4Identifier,
-                        Timestamp: new Date().toISOString(),
-                        Status: 0,
-                        Payload: {}
-                    }],
-                    CorrelationId: ""
-                }))
-            // Check Health of Application and update list of mams accordingly
-        })
         setTimeout(() => {
             console.log("[oi4Listener] Stop waiting for Health messages, removing " + statusUnknown.length + ": ")
             waiting = false
@@ -135,7 +114,7 @@ function getHealthOfDevices() {
                 console.log(oi4Identifier)
                 delete mams[oi4Identifier]
             })
-        }, 20000)
+        }, 60000)
     })
     tempMqttClient.on("message", (topic, message) => {
         statusUnknown.forEach(key => {
