@@ -106,6 +106,7 @@ function getHealthOfDevices() {
     })
     tempMqttClient.on('connect', () => {
         Object.keys(mams).forEach(key => {
+            console.log("Requesting health from " + key)
             // TODO: Fix Health requests
             tempMqttClient.publish("oi4/" + mams[key].PublisherId
                 + "/get/health/" + mams[key].ProductInstanceUri, JSON.stringify({
