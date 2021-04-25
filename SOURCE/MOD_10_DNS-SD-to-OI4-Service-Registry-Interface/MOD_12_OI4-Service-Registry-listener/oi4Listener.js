@@ -92,12 +92,10 @@ module.exports.start = (connectcb = () => { }) => {
             })
         }
     })
-    setInterval(() => {
-        getHealthOfDevices()
-    }, 60000);
+    monitorHealthOfDevices()
 }
 
-function getHealthOfDevices() {
+function monitorHealthOfDevices() {
     let statusUnknown = Object.keys(mams)
     let waiting = true
     let tempMqttClient = mqtt.connect([{ host: config.mqtthost, port: config.mqttport }])
@@ -109,11 +107,11 @@ function getHealthOfDevices() {
         setTimeout(() => {
             console.log("[oi4Listener] Stop waiting for Health messages, removing " + statusUnknown.length + ": ")
             waiting = false
-            delete tempMqttClient
             statusUnknown.forEach(oi4Identifier => {
                 console.log(oi4Identifier)
                 delete mams[oi4Identifier]
             })
+            statusUnknown = Object.keys(mams)
         }, 60000)
     })
     tempMqttClient.on("message", (topic, message) => {
