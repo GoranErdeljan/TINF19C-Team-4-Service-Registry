@@ -100,7 +100,8 @@ function getHealthOfDevices() {
     let waiting = true
     let tempMqttClient = mqtt.connect([{ host: config.mqtthost, port: config.mqttport }])
     tempMqttClient.subscribe("oi4/+/+/+/+/+/pub/health/#", (err) => {
-        console.error("[oi4Listener] " + err)
+        if (err)
+            console.error("[oi4Listener] " + err)
     })
     tempMqttClient.on('connect', () => {
         Object.keys(mams).forEach(key => {

@@ -19,6 +19,7 @@ var config = {
 
 config.oi4.oi4Identifier = 'urn:undefined.com/' + config.oi4.Model + '/' + config.oi4.Productcode + '/' + config.oi4.SerialNumber
 
+console.log("[config] Configuration is:")
 console.log(config)
 
 registry.start(undefined, undefined, () => {
@@ -28,7 +29,6 @@ registry.start(undefined, undefined, () => {
 oi4Listener.setConfig(config)
 oi4Listener.setValidator(validator)
 oi4Listener.start(() => {
-    console.log("Connected")
 })
 
 dnssdListener.start()
@@ -48,7 +48,7 @@ dnssdListener.addCallback((response) => {
 
     let mam = validator.buildmam(txtrecords)
 
-    console.log("Found service")
+    console.log("[dnssdListener] Found service")
     console.log(mam)
     registry.addDevice(mam.ProductInstanceUri, mam, ttl)
 })
