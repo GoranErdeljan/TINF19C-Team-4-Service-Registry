@@ -30,7 +30,7 @@ module.exports.start = function (port) {
         })
     }, 10000)
     setInterval(() => {
-        console.log("[webInterface] Current Entrie are: " + JSON.stringify(dnssdEntries))
+        console.log("[webInterface] Current Entries are: " + JSON.stringify(dnssdEntries))
     }, 60000);
 }
 
