@@ -97,7 +97,6 @@ module.exports.start = (connectcb = () => { }) => {
 
 function monitorHealthOfDevices() {
     let statusUnknown = Object.keys(mams)
-    let waiting = true
     let tempMqttClient = mqtt.connect([{ host: config.mqtthost, port: config.mqttport }])
     tempMqttClient.subscribe("oi4/+/+/+/+/+/pub/health/#", (err) => {
         if (err)
@@ -106,7 +105,6 @@ function monitorHealthOfDevices() {
     tempMqttClient.on('connect', () => {
         setTimeout(() => {
             console.log("[oi4Listener] Stop waiting for Health messages, removing " + statusUnknown.length + ": ")
-            waiting = false
             statusUnknown.forEach(oi4Identifier => {
                 console.log(oi4Identifier)
                 delete mams[oi4Identifier]
@@ -119,12 +117,13 @@ function monitorHealthOfDevices() {
             if (waiting) {
                 console.log("[oi4Listener] Got Health message from: ")
                 console.log(mams[key])
-                if (topic.includes(mams[key].PublisherId)
-                    && topic.includes(mams[key].mam.ProductInstanceUri)) {
-                    console.log("[oi4Listener] " + mams[key].mam.ProductInstanceUri + " is ok")
-                    let index = statusUnknown.indexOf(mams[key].mam.ProductInstanceUri)
-                    statusUnknown.splice(index, 1)
-                }
+                if (typeof mams[key] !== 'undefined')
+                    if (topic.includes(mams[key].PublisherId)
+                        && topic.includes(mams[key].mam.ProductInstanceUri)) {
+                        console.log("[oi4Listener] " + mams[key].mam.ProductInstanceUri + " is ok")
+                        let index = statusUnknown.indexOf(mams[key].mam.ProductInstanceUri)
+                        statusUnknown.splice(index, 1)
+                    }
             }
         })
     })
