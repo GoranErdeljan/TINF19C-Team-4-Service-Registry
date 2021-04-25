@@ -55,7 +55,7 @@ module.exports.addDNS_SDEntry = function (entry) {
             answer.data.forEach(buffer => {
                 object.txt.push(buffer.toString())
             })
-            object.ttl = Date.now() + answer.ttl
+            object.ttl = Date.now() + answer.ttl * 1000
         }
     })
     let exists = false
