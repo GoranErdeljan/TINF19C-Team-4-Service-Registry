@@ -114,17 +114,16 @@ function monitorHealthOfDevices() {
     })
     tempMqttClient.on("message", (topic, message) => {
         statusUnknown.forEach(key => {
-            if (waiting) {
-                console.log("[oi4Listener] Got Health message from: ")
-                console.log(mams[key])
-                if (typeof mams[key] !== 'undefined')
-                    if (topic.includes(mams[key].PublisherId)
-                        && topic.includes(mams[key].mam.ProductInstanceUri)) {
-                        console.log("[oi4Listener] " + mams[key].mam.ProductInstanceUri + " is ok")
-                        let index = statusUnknown.indexOf(mams[key].mam.ProductInstanceUri)
-                        statusUnknown.splice(index, 1)
-                    }
-            }
+            console.log("[oi4Listener] Got Health message from: ")
+            console.log(mams[key])
+            if (typeof mams[key] !== 'undefined')
+                if (topic.includes(mams[key].PublisherId)
+                    && topic.includes(mams[key].mam.ProductInstanceUri)) {
+                    console.log("[oi4Listener] " + mams[key].mam.ProductInstanceUri + " is ok")
+                    let index = statusUnknown.indexOf(mams[key].mam.ProductInstanceUri)
+                    statusUnknown.splice(index, 1)
+                }
+
         })
     })
 }
