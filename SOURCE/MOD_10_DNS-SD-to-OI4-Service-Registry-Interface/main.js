@@ -16,7 +16,10 @@ var config = {
     }
 }
 
+
 config.oi4.oi4Identifier = 'urn:undefined.com/' + config.oi4.Model + '/' + config.oi4.Productcode + '/' + config.oi4.SerialNumber
+
+console.log(config)
 
 registry.start(undefined, undefined, () => {
 })
