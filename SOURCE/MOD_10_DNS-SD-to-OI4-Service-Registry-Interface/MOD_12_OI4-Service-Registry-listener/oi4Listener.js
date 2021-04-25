@@ -40,18 +40,19 @@ module.exports.start = (connectcb = () => { }) => {
     client.on("message", (topic, message) => {
         // Add MAM to mams
         // TODO: Add checks for undefined values
-        
+
         console.log("Got MAM")
         console.log(message.toString("ascii"))
         let messageobject = JSON.parse(message)
-        if (messageobject.PublisherId !== config.DeviceClass + "/" + config.oi4Identifier)
-        messageobject.Messages.forEach(innerMessage => {
-            mams[innerMessage.Payload.ProductInstanceUri] = { mam: innerMessage.Payload, PublisherId: messageobject.PublisherId }
-            console.log("MAM-Listener added: " + innerMessage.Payload.ProductInstanceUri)
-            console.log("MAMs are now: ")
-            console.log(mams)
-            console.log()
-        })
+        if (messageobject.PublisherId !== config.DeviceClass + "/" + config.oi4Identifier) {
+            messageobject.Messages.forEach(innerMessage => {
+                mams[innerMessage.Payload.ProductInstanceUri] = { mam: innerMessage.Payload, PublisherId: messageobject.PublisherId }
+                console.log("MAM-Listener added: " + innerMessage.Payload.ProductInstanceUri)
+                console.log("MAMs are now: ")
+                console.log(mams)
+                console.log()
+            })
+        }
     })
     mdns.on('query', (query) => {
         let questions = query.questions
