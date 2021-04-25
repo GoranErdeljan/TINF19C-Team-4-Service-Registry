@@ -40,6 +40,8 @@ module.exports.start = (connectcb = () => { }) => {
     client.on("message", (topic, message) => {
         // Add MAM to mams
         // TODO: Add checks for undefined values
+        console.log("Got MAM")
+        console.log(message)
         let messageobject = JSON.parse(message)
         messageobject.Messages.forEach(innerMessage => {
             mams[innerMessage.Payload.ProductInstanceUri] = { mam: innerMessage.Payload, PublisherId: messageobject.PublisherId }
