@@ -17,7 +17,7 @@ module.exports.setConfig = function (setconfig) {
 module.exports.setValidator = function (setValidator) {
     validator = setValidator
 }
-module.exports.start = ( connectcb = () => { }) => {
+module.exports.start = (connectcb = () => { }) => {
     if (typeof validator === 'undefined') {
         console.error("No Validator specified")
         return
@@ -95,6 +95,7 @@ module.exports.start = ( connectcb = () => { }) => {
 
 function getHealthOfDevices() {
     let statusUnknown = Object.keys(mams)
+    let waiting = true
     let tempMqttClient = mqtt.connect([{ host: config.mqtthost, port: config.mqttport }])
     tempMqttClient.subscribe("oi4/+/+/+/+/+/pub/health/#", (err) => {
         console.error(err)
@@ -104,21 +105,24 @@ function getHealthOfDevices() {
             // TODO: Fix Health requests
             tempMqttClient.publish("oi4/" + mams[key].PublisherId
                 + "/get/health/" + mams[key].ProductInstanceUri, JSON.stringify({
-                        MessageId: Date.now() 
-                                    + "-" + config.oi4.DeviceClass 
-                                    + "/" + config.oi4.oi4Identifier,
-                        MessageType: "ua-data", 
-                        DataSetClassId: "d8e7b6df-42ba-448a-975a-199f59e8ffeb",
-                        PublisherId: config.oi4.DeviceClass + "/" + config.oi4.oi4Identifier, 
-                        Messages: [{ 
-                            DataSetWriterId: config.oi4.oi4Identifier,
-                            Timestamp: new Date().toISOString(), 
-                            Status: 0, 
-                            Payload: {} }], 
-                        CorrelationId: "" }))
+                    MessageId: Date.now()
+                        + "-" + config.oi4.DeviceClass
+                        + "/" + config.oi4.oi4Identifier,
+                    MessageType: "ua-data",
+                    DataSetClassId: "d8e7b6df-42ba-448a-975a-199f59e8ffeb",
+                    PublisherId: config.oi4.DeviceClass + "/" + config.oi4.oi4Identifier,
+                    Messages: [{
+                        DataSetWriterId: config.oi4.oi4Identifier,
+                        Timestamp: new Date().toISOString(),
+                        Status: 0,
+                        Payload: {}
+                    }],
+                    CorrelationId: ""
+                }))
             // Check Health of Application and update list of mams accordingly
         })
         setTimeout(() => {
+            waiting = false
             delete tempMqttClient
             statusUnknown.forEach(oi4Identifier => {
                 delete mams[oi4Identifier]
@@ -127,20 +131,21 @@ function getHealthOfDevices() {
     })
     tempMqttClient.on("message", (topic, message) => {
         statusUnknown.forEach(key => {
-            console.log("Got Health message from: ")
-            console.log(mams[key])
-            if (topic.includes(mams[key].PublisherId) 
-                && topic.includes(mams[key].mam.ProductInstanceUri))
-            {
-                console.log(mams[key].mam.ProductInstanceUri + " is ok")
-                let index = statusUnknown.indexOf(mams[key].mam.ProductInstanceUri)
-                statusUnknown.splice(index, 1)
+            if (waiting) {
+                console.log("Got Health message from: ")
+                console.log(mams[key])
+                if (topic.includes(mams[key].PublisherId)
+                    && topic.includes(mams[key].mam.ProductInstanceUri)) {
+                    console.log(mams[key].mam.ProductInstanceUri + " is ok")
+                    let index = statusUnknown.indexOf(mams[key].mam.ProductInstanceUri)
+                    statusUnknown.splice(index, 1)
+                }
             }
         })
     })
 }
 
-function buildTXTOfMAM (mam) {
+function buildTXTOfMAM(mam) {
     let txt = ["oi4=true"]
     Object.keys(mam).forEach(key => {
         txt.push(key + "=" + JSON.stringify(mam[key]))
