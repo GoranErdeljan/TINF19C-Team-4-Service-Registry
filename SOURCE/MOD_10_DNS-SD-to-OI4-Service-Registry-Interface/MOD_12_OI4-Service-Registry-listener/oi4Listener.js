@@ -47,8 +47,8 @@ module.exports.start = (connectcb = () => { }) => {
         let messageobject = JSON.parse(message)
         
         console.log(messageobject.PublisherId)
-        console.log(config.DeviceClass + "/" + config.oi4Identifier)
-        if (messageobject.PublisherId !== config.DeviceClass + "/" + config.oi4Identifier) {
+        console.log(config.oi4.DeviceClass + "/" + config.oi4.oi4Identifier)
+        if (messageobject.PublisherId !== config.oi4.DeviceClass + "/" + config.oi4.oi4Identifier) {
             messageobject.Messages.forEach(innerMessage => {
                 mams[innerMessage.Payload.ProductInstanceUri] = { mam: innerMessage.Payload, PublisherId: messageobject.PublisherId }
                 console.log("MAM-Listener added: " + innerMessage.Payload.ProductInstanceUri)
