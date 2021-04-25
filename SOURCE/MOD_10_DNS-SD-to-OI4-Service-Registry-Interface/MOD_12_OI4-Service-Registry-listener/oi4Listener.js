@@ -53,6 +53,7 @@ module.exports.start = (connectcb = () => { }) => {
         }
     })
     mdns.on('query', (query) => {
+        console.log("[mdns] Received Query, checking if adressed")
         let questions = query.questions
         let addressed = true
         questions.forEach(element => {
@@ -127,7 +128,7 @@ function getHealthOfDevices() {
             // Check Health of Application and update list of mams accordingly
         })
         setTimeout(() => {
-            console.log("[oi4Listener] Stop waiting for Health messages, removing" + statusUnknown.length + ": ")
+            console.log("[oi4Listener] Stop waiting for Health messages, removing " + statusUnknown.length + ": ")
             waiting = false
             delete tempMqttClient
             statusUnknown.forEach(oi4Identifier => {
