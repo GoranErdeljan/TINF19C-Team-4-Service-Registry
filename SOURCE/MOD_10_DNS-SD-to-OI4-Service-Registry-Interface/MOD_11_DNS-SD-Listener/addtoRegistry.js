@@ -1,4 +1,11 @@
+/* Check out our GitHub: github.com/GoranErdeljan/TINF19C-Team-4-Service-Registry
+ * This File offers functionality to register services at the OI4-Service-Registry.
+*/
+
+// Import the mqtt package for communication with the OI4-Service-Registry
 var mqtt = require('mqtt')
+
+
 // Device should have ttl and all payloads that need to be published on the oi4-Messagebus
 // Health will always be reported as 100, except, when the device entry is older than its ttl, then 0 will be reported
 var devices = {}
@@ -198,6 +205,7 @@ function pubLicenseText(correlationId = '') {
 }
 
 // This function publishes the config of the Device to the MQTT Broker, for example when it is requested by the Registry
+/// 
 function pubConfig(correlationId = '') {
     client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/config/' + oi4Identifier, buildmsg([{
         DataSetWriterId: oi4Identifier,
