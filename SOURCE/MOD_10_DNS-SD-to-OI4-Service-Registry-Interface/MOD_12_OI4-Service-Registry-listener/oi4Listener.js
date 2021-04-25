@@ -43,7 +43,10 @@ module.exports.start = (connectcb = () => { }) => {
 
         console.log("Got MAM")
         console.log(message.toString("ascii"))
+        
         let messageobject = JSON.parse(message)
+        
+        console.log(messageobject.PublisherId)
         if (messageobject.PublisherId !== config.DeviceClass + "/" + config.oi4Identifier) {
             messageobject.Messages.forEach(innerMessage => {
                 mams[innerMessage.Payload.ProductInstanceUri] = { mam: innerMessage.Payload, PublisherId: messageobject.PublisherId }
