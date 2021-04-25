@@ -127,7 +127,7 @@ function getHealthOfDevices() {
             // Check Health of Application and update list of mams accordingly
         })
         setTimeout(() => {
-            console.log("[oi4Listener] Stop waiting for Health messages, removing: ")
+            console.log("[oi4Listener] Stop waiting for Health messages, removing" + statusUnknown.length + ": ")
             waiting = false
             delete tempMqttClient
             statusUnknown.forEach(oi4Identifier => {
