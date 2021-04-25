@@ -138,12 +138,14 @@ function getHealthOfDevices() {
             if (waiting) {
                 console.log("Got Health message from: ")
                 console.log(mams[key])
+                console.log(statusUnknown)
                 if (topic.includes(mams[key].PublisherId)
                     && topic.includes(mams[key].mam.ProductInstanceUri)) {
                     console.log(mams[key].mam.ProductInstanceUri + " is ok")
                     let index = statusUnknown.indexOf(mams[key].mam.ProductInstanceUri)
                     statusUnknown.splice(index, 1)
                 }
+                console.log(statusUnknown)
             }
         })
     })
