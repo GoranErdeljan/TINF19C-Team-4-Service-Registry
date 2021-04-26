@@ -24,7 +24,9 @@ var config = {
         Productcode: 'DNS_SD_INTERFACE',
         DeviceClass: "Aggregation",
         Urn: "urn:undefined.com"
-    }
+    },
+    registerDNS_DS_atOI4: true,
+    announceOI4: true
 }
 
 // Get configuration from environment variables
@@ -47,6 +49,11 @@ if (envvar.includes("OI4_DEVICECLASS"))
     config.oi4.DeviceClass = process.env.OI4_DEVICECLASS
 if (envvar.includes("OI4_URN"))
     config.oi4.Urn = process.env.OI4_URN
+if (envvar.includes("REGISTER_DNS_SD_AT_OI4"))
+    config.registerDNS_DS_atOI4 = process.env.REGISTER_DNS_SD_AT_OI4
+if (envvar.includes("ANNOUNCE_OI4_REGISTERED_SERVICES"))
+    config.announceOI4 = process.env.ANNOUNCE_OI4_REGISTERED_SERVICES
+
 
 // Update oi4Identifier
 config.oi4.oi4Identifier = config.oi4.Urn + '/' + config.oi4.Model + '/' + config.oi4.Productcode + '/' + config.oi4.SerialNumber
@@ -63,33 +70,37 @@ addToRegistry.setConfig(config)
 addToRegistry.start(() => {
 })
 
-// Start the oi4Listener and give it a reference to the validator
-oi4Listener.setConfig(config)
-oi4Listener.setValidator(validator)
-oi4Listener.start(() => {
-})
+if (config.announceOI4) {
+    // Start the oi4Listener and give it a reference to the validator
+    oi4Listener.setConfig(config)
+    oi4Listener.setValidator(validator)
+    oi4Listener.start(() => {
+    })
+}
 
-// Start dnssdListener and add callback for adding them to the registry
-dnssdListener.start()
-dnssdListener.addCallback((response) => {
+if (config.registerDNS_DS_atOI4) {
+    // Start dnssdListener and add callback for adding them to the registry
+    dnssdListener.start()
+    dnssdListener.addCallback((response) => {
 
-    let txtrecords = []
-    let ttl
+        let txtrecords = []
+        let ttl
 
-    response.answers.forEach(answer => {
-        if (answer.type == 'TXT') {
-            answer.data.forEach(buffer => {
-                txtrecords.push(buffer.toString())
-                ttl = answer.ttl
-            })
+        response.answers.forEach(answer => {
+            if (answer.type == 'TXT') {
+                answer.data.forEach(buffer => {
+                    txtrecords.push(buffer.toString())
+                    ttl = answer.ttl
+                })
+            }
+        })
+
+        let mam = validator.buildmam(txtrecords)
+
+        if (typeof mam !== 'undefined') {
+            console.log("[dnssdListener] Found service")
+            console.log(mam)
+            addToRegistry.addDevice(mam.ProductInstanceUri, mam, ttl)
         }
     })
-
-    let mam = validator.buildmam(txtrecords)
-
-    if (typeof mam !== 'undefined') {
-        console.log("[dnssdListener] Found service")
-        console.log(mam)
-        addToRegistry.addDevice(mam.ProductInstanceUri, mam, ttl)
-    }
-})
+}
