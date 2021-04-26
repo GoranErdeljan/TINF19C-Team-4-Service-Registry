@@ -28,7 +28,7 @@ module.exports.start = (connectcb = () => { }) => {
         console.error("[oi4Listener] No config specified")
         return
     }
-    _client = mqtt.connect([{ host: config.mqtt.hostname, port: config.mqtt.port }])
+    _client = mqtt.connect([{ host: _config.mqtt.hostname, port: _config.mqtt.port }])
     _client.on("connect", () => {
         connectcb()
         _client.subscribe("oi4/+/+/+/+/+/pub/mam/#", (err) => {
