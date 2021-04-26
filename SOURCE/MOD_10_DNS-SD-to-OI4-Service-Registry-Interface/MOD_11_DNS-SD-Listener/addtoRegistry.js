@@ -189,7 +189,7 @@ function pubHealth(correlationId = '') {
     _client.publish('oi4/' + _config.oi4.DeviceClass 
                     + '/' + _config.oi4.oi4Identifier 
                     + '/pub/health/' + _config.oi4.oi4Identifier, buildmsg([{
-        DataSetWriterId: oi4Identifier,
+        DataSetWriterId: _config.oi4.oi4Identifier,
         Timestamp: new Date().toISOString(),
         Status: 0,
         Payload: {
