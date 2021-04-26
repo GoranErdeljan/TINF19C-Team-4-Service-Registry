@@ -2,9 +2,17 @@
  * This File offers functionality to chack whether TXT-Records are conform with the OI$-Specifications
 */
 
-// This function checks whether the TXT-Records are meant for the OI4-Service-Registry
+// This variable stores the configuration
+var _config
+
+// This function is used to set the configuration used by the module
+module.exports.setConfig = function(config) {
+    _config = config
+}
+
+// This function checks whether the TXT-Records are meant for the OI4-Service-Registry 
 module.exports.check = function (txtrecords) {
-    if (txtrecords.includes("oi4=true"))
+    if (txtrecords.includes("oi4=true") && !txtrecords.includes("DataSetWriterId=" + _config.oi4.oi4Identifier))
     {
         return true
     }
@@ -21,7 +29,7 @@ module.exports.buildmam = function (txtrecords) {
         txtrecords.forEach(entry => {
             let json = entry.slice(entry.indexOf('=') + 1, entry.length)
             let key = entry.slice(0, entry.indexOf('='))
-            if (key !== 'oi4')
+            if (key !== 'oi4' && key !== "DataSetWriterId")
             {
                 mam[key] = JSON.parse(json)
             }
@@ -30,7 +38,7 @@ module.exports.buildmam = function (txtrecords) {
     }
     else
     {
-        console.log("[oi4ConformityValidator] TXTRecords are not meant for the OI4-Service-Registry")
+        console.log("[oi4ConformityValidator] TXTRecords are not meant for the OI4-Service-Registry or are announced by this interface")
         return undefined
     }
 }

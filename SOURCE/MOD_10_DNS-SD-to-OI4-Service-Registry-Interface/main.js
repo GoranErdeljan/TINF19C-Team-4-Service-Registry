@@ -55,6 +55,8 @@ config.oi4.oi4Identifier = config.oi4.Urn + '/' + config.oi4.Model + '/' + confi
 console.log("[config] Configuration is:")
 console.log(config)
 
+// Set validator configuration
+validator.setConfig(config)
 
 // Start the addtoRegistry submodule
 addToRegistry.setConfig(config)

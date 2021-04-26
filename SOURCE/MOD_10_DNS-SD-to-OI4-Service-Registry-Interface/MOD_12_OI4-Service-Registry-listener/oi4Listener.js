@@ -133,5 +133,6 @@ function buildTXTOfMAM(mam) {
     Object.keys(mam).forEach(key => {
         txt.push(key + "=" + JSON.stringify(mam[key]))
     })
+    txt.push("DataSetWriterId=" + _config.oi4.oi4Identifier)
     return txt
 }
