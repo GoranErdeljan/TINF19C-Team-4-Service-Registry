@@ -153,7 +153,7 @@ module.exports.start = function (connectcb = () => { }) {
     })
 
     // Handle MQTT communication Errors
-    client.on('error', (err) => {
+    _client.on('error', (err) => {
         console.log(err)
     })
 }
