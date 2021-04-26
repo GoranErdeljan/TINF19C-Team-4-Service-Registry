@@ -60,7 +60,7 @@ module.exports.start = (connectcb = () => { }) => {
         let addressed = true
         questions.forEach(element => {
             element.name.split('.').forEach(split => {
-                if (!typeArray.includes(split)) {
+                if (!_typeArray.includes(split)) {
                     addressed = false
                 }
             })
