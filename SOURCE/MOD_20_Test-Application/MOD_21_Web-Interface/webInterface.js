@@ -74,7 +74,7 @@ module.exports.addDNS_SDEntry = function (entry) {
     // Determine whether new entry already exists and doesn't need to be added
     let exists = false
 
-    dnssdEntries.forEach(element => {
+    _dnssdEntries.forEach(element => {
         let same = true
         element.srv.forEach(srv => {
             if (!object.srv.includes(srv))
