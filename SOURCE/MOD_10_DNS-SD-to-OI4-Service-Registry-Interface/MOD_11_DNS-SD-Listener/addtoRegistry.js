@@ -8,29 +8,46 @@ var mqtt = require('mqtt')
 
 // Device should have ttl and all payloads that need to be published on the oi4-Messagebus
 // Health will always be reported as 100, except, when the device entry is older than its ttl, then 0 will be reported
-var devices = {}
+var _devices = {}
 
 // Configuration
-const SerialNumber = 'undefined'
-const Model = 'DNS_SD_INTERFACE'
-const Productcode = 'DNS_SD_INTERFACE'
-const oi4Identifier = 'urn:undefined.com/' + Model + '/' + Productcode + '/' + SerialNumber
-const DeviceClass = "Aggregation"
+var _config = {
+    oi4: {
+        SerialNumber: 'undefined',
+        Model: 'DNS_SD_INTERFACE',
+        Productcode: 'DNS_SD_INTERFACE',
+        DeviceClass: "Aggregation"
+    },
+    mqtt: {
+        hostname: "localhost",
+        port: 1883
+    }
+}
+_config.oi4.oi4Identifier = 'urn:undefined.com/' + _config.oi4.Model + '/' + _config.oi4.Productcode + '/' + _config.oi4.SerialNumber
 
-var client
+// This variable holds the mqtt client
+var _client
 
-module.exports.start = function (hostname = "localhost", port = 1883, connectcb = () => { }) {
+// This function sets the configuration of the module
+module.exports.start = function(config) {
+    _config = config
+}
+
+// This function is used to start the module
+module.exports.start = function (connectcb = () => { }) {
 
     // Connect to MQTT Broker
-    client = mqtt.connect([{ host: hostname, port: port }])
+    _client = mqtt.connect([{ host: _config.mqtt.hostname, port: _config.mqtt.port }])
 
     // Handle Connection
-    client.on('connect', () => {
-        client.subscribe('oi4/' + DeviceClass + '/' + oi4Identifier + '/#', (err) => {
+    _client.on('connect', () => {
+        _client.subscribe('oi4/' + _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier + '/#', (err) => {
             if (err)
                 console.log(err)
         })
-        client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
+        _client.publish('oi4/' + _config.oi4.DeviceClass
+                         + '/' + _config.oi4.oi4Identifier 
+                         + '/pub/mam/' + _config.oi4.oi4Identifier, buildmsg(buildmamMessage()))
         setInterval(() => {
             pubHealth()
         }, 60000)
@@ -38,9 +55,10 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
     })
 
     // Handle Messages
-    client.on('message', (topic, message) => {
-        console.log('Topic: ' + topic + ' Message: ' + message)
+    _client.on('message', (topic, message) => {
+        console.log('[addtoRegistry] Topic: ' + topic + '\n[addtoRegistry] Message: ' + message)
         console.log()
+
         let correlationId
         if (JSON.parse(message).CorrelationId !== "") {
             correlationId = JSON.parse(message).CorrelationId
@@ -60,7 +78,9 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
         else if (topic.endsWith(oi4Identifier)) {
             if (topic.includes('get/mam')) // Handle Requests requesting the Master Asset Model
             {
-                client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage(), '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58', correlationId))
+                _client.publish('oi4/' + _config.oi4.DeviceClass 
+                                + '/' + _config.oi4.oi4Identifier 
+                                + '/pub/mam/' + _config.oi4.oi4Identifier, buildmsg(buildmamMessage(), '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58', correlationId))
             }
             else if (topic.includes("get/health")) // Handle Requests concerning the Health of the Application
             {
@@ -80,23 +100,28 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
             }
         }
         else {
-            Object.keys(devices).forEach(device => {
-                if (topic.endsWith(devices[device].oi4Identifier)) {
-                    if (topic.includes("get/mam")) {
-                        client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + devices[device].oi4Identifier,
+            // Respond for Devices
+            Object.keys(_devices).forEach(device => {
+                if (topic.endsWith(_devices[device].oi4Identifier)) {
+                    if (topic.includes("get/mam")) {    // Handle mam requests
+                        _client.publish('oi4/' + _config.oi4.DeviceClass 
+                                        + '/' + _config.oi4.oi4Identifier 
+                                        + '/pub/mam/' + _devices[device].oi4Identifier,
                             buildmsg([{
-                                DataSetWriterId: devices[device].oi4Identifier,
+                                DataSetWriterId: _config.oi4.oi4Identifier,
                                 Timestamp: new Date().toISOString(),
                                 Status: 0,
-                                Payload: devices[device].mam
+                                Payload: _devices[device].mam
                             }],
                                 '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58',
                                 correlationId))
                     }
-                    else if (topic.includes("get/health")) {
-                        client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/health/' + devices[device].oi4Identifier,
+                    else if (topic.includes("get/health")) {    // Handle health requests
+                        _client.publish('oi4/' + _config.oi4.DeviceClass 
+                                        + '/' + _config.oi4.oi4Identifier 
+                                        + '/pub/health/' + _devices[device].oi4Identifier,
                             buildmsg([{
-                                DataSetWriterId: oi4Identifier,
+                                DataSetWriterId: _config.oi4.oi4Identifier,
                                 Timestamp: new Date().toISOString(),
                                 Status: 0,
                                 Payload: {
@@ -107,10 +132,12 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
                                 "d8e7b6df-42ba-448a-975a-199f59e8ffeb",
                                 correlationId))
                     }
-                    else if (topic.includes("get/profile")) {
-                        client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/profile/' + devices[device].oi4Identifier,
+                    else if (topic.includes("get/profile")) {   // Handle profile requests
+                        client.publish('oi4/' + _config.oi4.DeviceClass 
+                                        + '/' + _config.oi4.oi4Identifier 
+                                        + '/pub/profile/' + _devices[device].oi4Identifier,
                             buildmsg([{
-                                DataSetWriterId: oi4Identifier,
+                                DataSetWriterId: _config.oi4.oi4Identifier,
                                 Timestamp: new Date().toISOString(),
                                 Status: 0,
                                 Payload: {
@@ -125,30 +152,32 @@ module.exports.start = function (hostname = "localhost", port = 1883, connectcb 
         }
     })
 
+    // Handle MQTT communication Errors
     client.on('error', (err) => {
         console.log(err)
     })
 }
 
+// This function is used to add a device to the module
 module.exports.addDevice = function (deviceidentifier, mam, ttl = Date.now() + 60000) {
-    if (typeof devices[deviceidentifier] === 'undefined') {
-        devices[deviceidentifier] = {
+    if (typeof _devices[deviceidentifier] === 'undefined') {
+        _devices[deviceidentifier] = {
             mam: mam,
             oi4Identifier: deviceidentifier,
             ttl: ttl
         }
     }
     else {
-        devices[deviceidentifier].mam = mam
-        devices[deviceidentifier].ttl = ttl
+        _devices[deviceidentifier].mam = mam
+        _devices[deviceidentifier].ttl = ttl
     }
 
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + deviceidentifier,
+    client.publish('oi4/' + _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier + '/pub/mam/' + deviceidentifier,
         buildmsg([{
-            DataSetWriterId: oi4Identifier,
+            DataSetWriterId: _config.oi4.oi4Identifier,
             Timestamp: new Date().toISOString(),
             Status: 0,
-            Payload: devices[deviceidentifier].mam
+            Payload: _devices[deviceidentifier].mam
         }],
             '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58'))
 
@@ -157,7 +186,9 @@ module.exports.addDevice = function (deviceidentifier, mam, ttl = Date.now() + 6
 
 // This function publishes the health of the Device to the MQTT Broker, for example when requested by the Registry
 function pubHealth(correlationId = '') {
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/health/' + oi4Identifier, buildmsg([{
+    _client.publish('oi4/' + _config.oi4.DeviceClass 
+                    + '/' + _config.oi4.oi4Identifier 
+                    + '/pub/health/' + _config.oi4.oi4Identifier, buildmsg([{
         DataSetWriterId: oi4Identifier,
         Timestamp: new Date().toISOString(),
         Status: 0,
@@ -170,8 +201,10 @@ function pubHealth(correlationId = '') {
 
 // This function publishes the license to the MQTT Broker
 function pubLicense(correlationId = '') {
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/license/' + oi4Identifier, buildmsg([{
-        DataSetWriterId: oi4Identifier,
+    client.publish('oi4/' + _config.oi4.DeviceClass + '/' 
+                    + _config.oi4.oi4Identifier + '/pub/license/' 
+                    + _config.oi4.oi4Identifier, buildmsg([{
+        DataSetWriterId: _config.oi4.oi4Identifier,
         Timestamp: new Date().toISOString(),
         Payload: {
             licenses: [{
@@ -184,8 +217,9 @@ function pubLicense(correlationId = '') {
 
 // This function publishes the License Text to the MQTT Broker
 function pubLicenseText(correlationId = '') {
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/licenseText/GNULGPL', buildmsg([{
-        DataSetWriterId: oi4Identifier,
+    _client.publish('oi4/' + _config.oi4.DeviceClass 
+                    + '/' + _config.oi4.oi4Identifier + '/pub/licenseText/GNULGPL', buildmsg([{
+        DataSetWriterId: _config.oi4.oi4Identifier,
         Timestamp: new Date().toISOString(),
         Payload: {
             licText: "This library is free software; you can redistribute it and/or " +
@@ -205,10 +239,11 @@ function pubLicenseText(correlationId = '') {
 }
 
 // This function publishes the config of the Device to the MQTT Broker, for example when it is requested by the Registry
-/// 
 function pubConfig(correlationId = '') {
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/config/' + oi4Identifier, buildmsg([{
-        DataSetWriterId: oi4Identifier,
+    client.publish('oi4/' + _config.oi4.DeviceClass 
+                    + '/' + _config.oi4.oi4Identifier 
+                    + '/pub/config/' + _config.oi4.oi4Identifier, buildmsg([{
+        DataSetWriterId: _config.oi4.oi4Identifier,
         MetaDataVersion: {
             majorVersion: 0,
             minorVersion: 0
@@ -220,8 +255,10 @@ function pubConfig(correlationId = '') {
 
 // This function publishes the Profile of the Device to the MQTT Broker
 function pubProfile(correlationId = '') {
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/profile/' + oi4Identifier, buildmsg([{
-        DataSetWriterId: oi4Identifier,
+    client.publish('oi4/' + _config.oi4.DeviceClass 
+                    + '/' + _config.oi4.oi4Identifier 
+                    + '/pub/profile/' + _config.oi4.oi4Identifier, buildmsg([{
+        DataSetWriterId: _config.oi4.oi4Identifier,
         Timestamp: new Date().toISOString(),
         Status: 0,
         Payload: {
@@ -232,8 +269,9 @@ function pubProfile(correlationId = '') {
 
 // This function publishes the PublicationList to the MQTT Broker
 function pubPublicationList(correlationId = '') {
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/publicationList', buildmsg([{
-        DataSetWriterId: oi4Identifier,
+    client.publish('oi4/' + _config.oi4.DeviceClass 
+                    + '/' + _config.oi4.oi4Identifier + '/pub/publicationList', buildmsg([{
+        DataSetWriterId: _config.oi4.oi4Identifier,
         Timestamp: new Date().toISOString(),
         Payload: {
             publicationList: []
@@ -244,7 +282,7 @@ function pubPublicationList(correlationId = '') {
 // This function builds the mam Message, as specified by the OI4
 function buildmamMessage() {
     var mam = [{
-        DataSetWriterId: oi4Identifier,
+        DataSetWriterId: _config.oi4.oi4Identifier,
         Timestamp: new Date().toISOString(),
         Status: 0,
         Payload: {
@@ -255,20 +293,20 @@ function buildmamMessage() {
             ManufacturerUri: "urn:undefined.com",
             Model: {
                 Locale: "de-de",
-                Text: Model
+                Text: _config.oi4.Model
             },
-            ProductCode: Productcode,
+            ProductCode: _config.oi4.Productcode,
             HardwareRevision: "",
             SoftwareRevision: "0.0",
             DeviceRevision: "",
             DeviceManual: "Not available",
-            DeviceClass: DeviceClass,
-            ProductInstanceUri: oi4Identifier,
+            DeviceClass: _config.oi4.DeviceClass,
+            ProductInstanceUri: _config.oi4.oi4Identifier,
             RevisionCounter: 1,
-            SerialNumber: SerialNumber,
+            SerialNumber: _config.oi4.SerialNumber,
             Description: {
                 Locale: "de-de",
-                Text: Model
+                Text: _config.oi4.Model
             }
         }
     }]
@@ -280,9 +318,9 @@ module.exports.mam = buildmamMessage
 // This function builds a message, for publication at the MQTT Broker, it creates a wrapper around a given message
 function buildmsg(messages, DataSetClassId = '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58', CorrelationId = '') {
     var msgWrapper = {
-        MessageId: Date.now().toString() + '-' + DeviceClass + '/' + oi4Identifier,
+        MessageId: Date.now().toString() + '-' + _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier,
         MessageType: 'ua-data',
-        PublisherId: DeviceClass + '/' + oi4Identifier,
+        PublisherId: _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier,
         DataSetClassId: DataSetClassId,
         CorrelationId: CorrelationId,
         Messages: messages

@@ -1,5 +1,5 @@
 /* Check out our GitHub: github.com/GoranErdeljan/TINF19C-Team-4-Service-Registry
- * This File is the main File, that is the entrypoint of the DNS-SD Test-Application
+ * This File is the main File, which is the entrypoint of the DNS-SD Test-Application
 */
 
 // Importing all submodules
