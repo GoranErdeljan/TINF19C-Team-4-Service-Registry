@@ -87,8 +87,9 @@ dnssdListener.addCallback((response) => {
 
     let mam = validator.buildmam(txtrecords)
 
-    console.log("[dnssdListener] Found service")
-    console.log(mam)
-    if (typeof mam !== 'undefined')
+    if (typeof mam !== 'undefined') {
+        console.log("[dnssdListener] Found service")
+        console.log(mam)
         addToRegistry.addDevice(mam.ProductInstanceUri, mam, ttl)
+    }
 })
