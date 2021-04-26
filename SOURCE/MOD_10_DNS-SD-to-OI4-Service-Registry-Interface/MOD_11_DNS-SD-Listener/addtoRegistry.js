@@ -75,7 +75,7 @@ module.exports.start = function (connectcb = () => { }) {
         {
             pubLicenseText(correlationId)
         }
-        else if (topic.endsWith(oi4Identifier)) {
+        else if (topic.endsWith(_config.oi4.oi4Identifier)) {
             if (topic.includes('get/mam')) // Handle Requests requesting the Master Asset Model
             {
                 _client.publish('oi4/' + _config.oi4.DeviceClass 
