@@ -149,8 +149,7 @@ function monitorHealthOfDevices() {
         statusUnknown.forEach(key => {
             console.log("[oi4Listener] Got Health message from: ")
             console.log(_mams[key])
-            if (typeof _mams[key] !== 'undefined')
-            {
+            if (typeof _mams[key] !== 'undefined') {
                 if (topic.includes(_mams[key].PublisherId)
                     && topic.includes(_mams[key].mam.ProductInstanceUri)) {
                     console.log("[oi4Listener] " + _mams[key].mam.ProductInstanceUri + " is ok")
@@ -160,34 +159,35 @@ function monitorHealthOfDevices() {
                 known = true
             }
         })
-        Object.keys(_mams).forEach(mam => {
-            if (topic.includes(mam.mam.ProductInstanceUri))
+        Object.keys(_mams).forEach(key => {
+            if (topic.includes(_mams[key].mam.ProductInstanceUri))
                 known = true
         })
-        if (!known)
-        {
-            // Request mam from device
-            let messageobject = JSON.parse(message)
-            
-            if (typeof messageobject !== 'undefined')
-            {
+        if (!known) {
+            try {
+                // Request mam from device
+                let messageobject = JSON.parse(message)
+
                 let payload = messageobject.Messages[0].Payload
-                tempMqttClient.publish("oi4/" + payload.DeviceClass 
-                                        + "/" + payload.ProductInstanceUri 
-                                        + "/get/mam/" + payload.ProductInstanceUri, JSON.stringify({
-                                            MessageId: Date.now() + "-" + _config.oi4.DeviceClass + "/" + _config.oi4.oi4Identifier,
-                                            MessageType: "ua-data",
-                                            DataSetClassId: "360ca8f3-5e66-42a2-8f10-9cdf45f4bf58",
-                                            PublisherId: _config.oi4.DeviceClass + "/" + _config.oi4.oi4Identifier,
-                                            Messages: [{
-                                                DataSetWriterId: _config.oi4.oi4Identifier,
-                                                Timestamp: new Date().toISOString(),
-                                                Status: 0,
-                                                Payload: {}
-                                            }],
-                                            CorrelationId: ""
-                                        }))
+                tempMqttClient.publish("oi4/" + payload.DeviceClass
+                    + "/" + payload.ProductInstanceUri
+                    + "/get/mam/" + payload.ProductInstanceUri, JSON.stringify({
+                        MessageId: Date.now() + "-" + _config.oi4.DeviceClass + "/" + _config.oi4.oi4Identifier,
+                        MessageType: "ua-data",
+                        DataSetClassId: "360ca8f3-5e66-42a2-8f10-9cdf45f4bf58",
+                        PublisherId: _config.oi4.DeviceClass + "/" + _config.oi4.oi4Identifier,
+                        Messages: [{
+                            DataSetWriterId: _config.oi4.oi4Identifier,
+                            Timestamp: new Date().toISOString(),
+                            Status: 0,
+                            Payload: {}
+                        }],
+                        CorrelationId: ""
+                    }))
+            } catch (err) {
+                console.log(err)
             }
+
         }
     })
 }
