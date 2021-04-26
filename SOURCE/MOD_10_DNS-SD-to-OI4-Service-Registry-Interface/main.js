@@ -89,5 +89,6 @@ dnssdListener.addCallback((response) => {
 
     console.log("[dnssdListener] Found service")
     console.log(mam)
-    addToRegistry.addDevice(mam.ProductInstanceUri, mam, ttl)
+    if (typeof mam !== 'undefined')
+        addToRegistry.addDevice(mam.ProductInstanceUri, mam, ttl)
 })

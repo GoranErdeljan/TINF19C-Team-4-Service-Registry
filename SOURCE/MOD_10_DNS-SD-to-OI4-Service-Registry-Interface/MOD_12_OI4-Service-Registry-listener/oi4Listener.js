@@ -101,7 +101,7 @@ function monitorHealthOfDevices() {
     let statusUnknown = Object.keys(_mams)
     let tempMqttClient = mqtt.connect([{ host: _config.mqtt.hostname, port: _config.mqtt.port }])
     tempMqttClient.subscribe("oi4/+/+/+/+/+/pub/health/#", (err) => {
-        console.log("[oi4Identifier] Subscribed to health messages")
+        console.log("[oi4Listener] Subscribed to health messages")
         if (err)
             console.error("[oi4Listener] " + err)
     })
