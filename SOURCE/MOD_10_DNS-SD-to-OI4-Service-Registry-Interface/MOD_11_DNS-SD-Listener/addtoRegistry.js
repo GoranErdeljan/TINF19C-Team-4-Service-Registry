@@ -172,7 +172,7 @@ module.exports.addDevice = function (deviceidentifier, mam, ttl = Date.now() + 6
         _devices[deviceidentifier].ttl = ttl
     }
 
-    client.publish('oi4/' + _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier + '/pub/mam/' + deviceidentifier,
+    _client.publish('oi4/' + _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier + '/pub/mam/' + deviceidentifier,
         buildmsg([{
             DataSetWriterId: _config.oi4.oi4Identifier,
             Timestamp: new Date().toISOString(),
