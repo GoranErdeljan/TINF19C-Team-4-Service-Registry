@@ -13,16 +13,12 @@ var config = {
     webInterface: {
         port: 8080
     },
-    announceService: {
-        port: 8080,
-        ip: "192.168.0.1"
-    },
     oi4: {
         SerialNumber: 'undefined',
         Model: 'DNS_SD_Test_Application',
         Productcode: 'DNS_SD_TEST',
-        DeviceClass: 'Registry'
-
+        DeviceClass: 'Registry',
+        Urn: "urn:undefined.com"
     },
     mqtt: {
         hostname: "localhost",
@@ -38,15 +34,30 @@ var config = {
 var envvar = Object.keys(process.env)
 if (envvar.includes("WEB_INTERFACE_PORT"))
     config.webInterface.port = process.env.WEB_INTERFACE_PORT
-if (envvar.includes("HOST_IP"))
-    config.announceService.ip = process.env.HOST_IP
-if (envvar.includes("HOST_PORT"))
-    config.announceService.port = process.env.HOST_PORT
+if (envvar.includes("MDNS_HOSTPORT"))
+    config.mdns.hostport = process.env.MDNS_HOSTPORT
+if (envvar.includes("MDNS_HOSTIP"))
+    config.mdns.hostip = process.env.MDNS_HOSTIP
 if (envvar.includes("MQTT_HOSTNAME"))
     config.mqtt.hostname = process.env.MQTT_HOSTNAME
 if (envvar.includes("MQTT_PORT"))
     config.mqtt.port = process.env.MQTT_PORT
+if (envvar.includes("OI4_SERIALNUMBER"))
+    config.oi4.SerialNumber = process.env.OI4_SERIALNUMBER
+if (envvar.includes("OI4_MODEL"))
+    config.oi4.Model = process.env.OI4_MODEL
+if (envvar.includes("OI4_PRODUCTCODE"))
+    config.oi4.Productcode = process.env.OI4_PRODUCTCODE
+if (envvar.includes("OI4_DEVICECLASS"))
+    config.oi4.DeviceClass = process.env.OI4_DEVICECLASS
+if (envvar.includes("OI4_URN"))
+    config.oi4.Urn = process.env.OI4_URN
 
+// Add oi4Identifier
+config.oi4.oi4Identifier = config.oi4.Urn + '/' + config.oi4.Model + '/' + config.oi4.Productcode + '/' + config.oi4.SerialNumber
+
+// logging configuration
+console.log("[config] Configuration is:")
 console.log(config)
 
 // Start Services

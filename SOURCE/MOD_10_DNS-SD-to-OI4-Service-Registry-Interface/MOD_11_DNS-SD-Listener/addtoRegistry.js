@@ -29,7 +29,7 @@ _config.oi4.oi4Identifier = 'urn:undefined.com/' + _config.oi4.Model + '/' + _co
 var _client
 
 // This function sets the configuration of the module
-module.exports.start = function(config) {
+module.exports.setConfig = function(config) {
     _config = config
 }
 
