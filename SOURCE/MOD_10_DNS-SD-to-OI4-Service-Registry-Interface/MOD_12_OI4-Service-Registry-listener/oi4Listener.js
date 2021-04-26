@@ -169,8 +169,7 @@ function monitorHealthOfDevices() {
                 let messageobject = JSON.parse(message)
 
                 let payload = messageobject.Messages[0].Payload
-                tempMqttClient.publish("oi4/" + payload.DeviceClass
-                    + "/" + payload.ProductInstanceUri
+                tempMqttClient.publish("oi4/" + messageobject.PublisherId
                     + "/get/mam/" + payload.ProductInstanceUri, JSON.stringify({
                         MessageId: Date.now() + "-" + _config.oi4.DeviceClass + "/" + _config.oi4.oi4Identifier,
                         MessageType: "ua-data",
