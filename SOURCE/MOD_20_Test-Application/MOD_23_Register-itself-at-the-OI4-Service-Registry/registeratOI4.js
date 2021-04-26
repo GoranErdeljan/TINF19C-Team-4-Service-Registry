@@ -1,44 +1,61 @@
+/* Check out our GitHub: github.com/GoranErdeljan/TINF19C-Team-4-Service-Registry
+ * This File creates a mqtt client, that is used to register the application at the oi4-Service-Registry
+*/
+
+// Import the mqtt package
 var mqtt = require('mqtt')
-var client
 
-// Configuration
-const SerialNumber = 'undefined'
-const Model = 'DNS_SD_Test_Application'
-const Productcode = 'DNS_SD_TEST'
-const oi4Identifier = 'urn:undefined.com/' + Model + '/' + Productcode + '/' + SerialNumber
-const DeviceClass = 'Registry'
+// _client stores the mqtt client
+var _client
 
-var config = {
-    hostname: "localhost",
-    port: 1883
+// Set the standard configuration
+var _config = {
+    oi4: {
+        SerialNumber: 'undefined',
+        Model: 'DNS_SD_Test_Application',
+        Productcode: 'DNS_SD_TEST',
+        DeviceClass: 'Registry'
+
+    },
+    mqtt: {
+        hostname: "localhost",
+        port: 1883
+    }
+}
+_config.oi4.oi4Identifier = 'urn:undefined.com/' + _config.oi4.Model + '/' + _config.oi4.Productcode + '/' + _config.oi4.SerialNumber,
+
+// This function is used to change the configuration of the module
+module.exports.setConfig = function (config) {
+    _config = config
 }
 
-module.exports.start = function (hostname, port) {
-
-    if (typeof hostname === 'string')
-        config.hostname = hostname
-    if (typeof port === 'number')
-        config.port = port
+// This function is used to start the module
+module.exports.start = function () {
 
     // Connect to MQTT Broker
-    client = mqtt.connect([{ host: config.hostname, port: config.port }])
+    _client = mqtt.connect([{ host: _config.mqtt.hostname, port: _config.mqtt.port }])
 
     // Handle Connection
     client.on('connect', () => {
+
+        // Subscribe to all MQTT messages concerning this application
         client.subscribe('oi4/' + DeviceClass + '/' + oi4Identifier + '/#', (err) => {
             if (err)
                 console.log(err)
         })
         client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
+        
+        // Set a interval for publishing health status as specified by the oi4
         setInterval(() => {
             pubHealth()
         }, 60000)
+
         // Handle Exiting by sending a goodbye message to the MQTT-Broker
         var exiting = false
         function exitHandler() {
             if (!exiting) {
                 exiting = true
-                console.log("Handling Exit")
+                console.log("[registeratoi4] Exiting...")
                 client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/health/' + oi4Identifier, buildmsg([{
                     DataSetWriterId: oi4Identifier,
                     Timestamp: new Date().toISOString(),
@@ -55,9 +72,8 @@ module.exports.start = function (hostname, port) {
                     }, 5000)
                 })
             }
-            else
-            {
-                console.log("Already exiting")
+            else {
+                console.log("[registeratoi4] Already exiting")
             }
         }
         process.on('exit', exitHandler.bind());
@@ -67,8 +83,10 @@ module.exports.start = function (hostname, port) {
 
     // Handle Messages
     client.on('message', (topic, message) => {
-        console.log('Topic: ' + topic + ' Message: ' + message)
+        console.log('[registeratOI4] Topic: ' + topic + ' Message: ' + message)
         console.log()
+
+        // Set the CorrelationId as specified by the OI4
         let correlationId
         if (JSON.parse(message).CorrelationId !== "") {
             correlationId = JSON.parse(message).CorrelationId
@@ -107,6 +125,7 @@ module.exports.start = function (hostname, port) {
         }
     })
 
+    // Handle mqtt connection errors
     client.on('error', (err) => {
         console.log(err)
     })
