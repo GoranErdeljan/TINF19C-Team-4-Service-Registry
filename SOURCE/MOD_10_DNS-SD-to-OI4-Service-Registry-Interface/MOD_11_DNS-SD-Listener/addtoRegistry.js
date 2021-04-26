@@ -201,7 +201,7 @@ function pubHealth(correlationId = '') {
 
 // This function publishes the license to the MQTT Broker
 function pubLicense(correlationId = '') {
-    client.publish('oi4/' + _config.oi4.DeviceClass + '/' 
+    _client.publish('oi4/' + _config.oi4.DeviceClass + '/' 
                     + _config.oi4.oi4Identifier + '/pub/license/' 
                     + _config.oi4.oi4Identifier, buildmsg([{
         DataSetWriterId: _config.oi4.oi4Identifier,
@@ -240,7 +240,7 @@ function pubLicenseText(correlationId = '') {
 
 // This function publishes the config of the Device to the MQTT Broker, for example when it is requested by the Registry
 function pubConfig(correlationId = '') {
-    client.publish('oi4/' + _config.oi4.DeviceClass 
+    _client.publish('oi4/' + _config.oi4.DeviceClass 
                     + '/' + _config.oi4.oi4Identifier 
                     + '/pub/config/' + _config.oi4.oi4Identifier, buildmsg([{
         DataSetWriterId: _config.oi4.oi4Identifier,
@@ -255,7 +255,7 @@ function pubConfig(correlationId = '') {
 
 // This function publishes the Profile of the Device to the MQTT Broker
 function pubProfile(correlationId = '') {
-    client.publish('oi4/' + _config.oi4.DeviceClass 
+    _client.publish('oi4/' + _config.oi4.DeviceClass 
                     + '/' + _config.oi4.oi4Identifier 
                     + '/pub/profile/' + _config.oi4.oi4Identifier, buildmsg([{
         DataSetWriterId: _config.oi4.oi4Identifier,
@@ -269,7 +269,7 @@ function pubProfile(correlationId = '') {
 
 // This function publishes the PublicationList to the MQTT Broker
 function pubPublicationList(correlationId = '') {
-    client.publish('oi4/' + _config.oi4.DeviceClass 
+    _client.publish('oi4/' + _config.oi4.DeviceClass 
                     + '/' + _config.oi4.oi4Identifier + '/pub/publicationList', buildmsg([{
         DataSetWriterId: _config.oi4.oi4Identifier,
         Timestamp: new Date().toISOString(),
