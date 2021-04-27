@@ -133,7 +133,7 @@ module.exports.start = function (connectcb = () => { }) {
                                 correlationId))
                     }
                     else if (topic.includes("get/profile")) {   // Handle profile requests
-                        client.publish('oi4/' + _config.oi4.DeviceClass 
+                        _client.publish('oi4/' + _config.oi4.DeviceClass 
                                         + '/' + _config.oi4.oi4Identifier 
                                         + '/pub/profile/' + _devices[device].oi4Identifier,
                             buildmsg([{
