@@ -12,8 +12,6 @@ WORKDIR /app/MOD_11_DNS-SD-Listener
 RUN npm install
 WORKDIR /app/MOD_12_OI4-Service-Registry-listener
 RUN npm install
-WORKDIR /app/MOD_13_OI4-Conformity-Validator
-RUN npm install
 WORKDIR /app
 
 ENTRYPOINT ["node", "main.js"]
