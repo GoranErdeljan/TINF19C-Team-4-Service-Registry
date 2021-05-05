@@ -1,46 +1,67 @@
+/* Check out our GitHub: github.com/GoranErdeljan/TINF19C-Team-4-Service-Registry
+ * This File creates a mqtt client, that is used to register the application at the oi4-Service-Registry
+*/
+
+// Import the mqtt package
 var mqtt = require('mqtt')
-var client
 
-// Configuration
-const SerialNumber = 'undefined'
-const Model = 'DNS_SD_Test_Application'
-const Productcode = 'DNS_SD_TEST'
-const oi4Identifier = 'urn:undefined.com/' + Model + '/' + Productcode + '/' + SerialNumber
-const DeviceClass = 'Aggregation'
+// _client stores the mqtt client
+var _client
 
-var config = {
-    hostname: "localhost",
-    port: 1883
+// Set the standard configuration
+var _config = {
+    oi4: {
+        SerialNumber: 'undefined',
+        Model: 'DNS_SD_Test_Application',
+        Productcode: 'DNS_SD_TEST',
+        DeviceClass: 'Registry'
+
+    },
+    mqtt: {
+        hostname: "localhost",
+        port: 1883
+    }
+}
+_config.oi4.oi4Identifier = 'urn:undefined.com/' + _config.oi4.Model + '/' + _config.oi4.Productcode + '/' + _config.oi4.SerialNumber,
+
+// This function is used to change the configuration of the module
+module.exports.setConfig = function (config) {
+    _config = config
 }
 
-module.exports.start = function (hostname, port) {
-
-    if (typeof hostname === 'string')
-        config.hostname = hostname
-    if (typeof port === 'number')
-        config.port = port
+// This function is used to start the module
+module.exports.start = function () {
 
     // Connect to MQTT Broker
-    client = mqtt.connect([{ host: config.hostname, port: config.port }])
+    _client = mqtt.connect([{ host: _config.mqtt.hostname, port: _config.mqtt.port }])
 
     // Handle Connection
-    client.on('connect', () => {
-        client.subscribe('oi4/' + DeviceClass + '/' + oi4Identifier + '/#', (err) => {
+    _client.on('connect', () => {
+
+        // Subscribe to all MQTT messages concerning this application
+        _client.subscribe('oi4/' + _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier + '/#', (err) => {
             if (err)
                 console.log(err)
         })
-        client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage()))
+        _client.publish('oi4/' + _config.oi4.DeviceClass 
+                        + '/' + _config.oi4.oi4Identifier 
+                        + '/pub/mam/' + _config.oi4.oi4Identifier, buildmsg(buildmamMessage()))
+        
+        // Set a interval for publishing health status as specified by the oi4
         setInterval(() => {
             pubHealth()
         }, 60000)
+
         // Handle Exiting by sending a goodbye message to the MQTT-Broker
         var exiting = false
         function exitHandler() {
             if (!exiting) {
                 exiting = true
-                console.log("Handling Exit")
-                client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/health/' + oi4Identifier, buildmsg([{
-                    DataSetWriterId: oi4Identifier,
+                console.log("[registeratoi4] Exiting...")
+                _client.publish('oi4/' + _config.oi4.DeviceClass 
+                                + '/' + _config.oi4.oi4Identifier 
+                                + '/pub/health/' + _config.oi4.oi4Identifier, buildmsg([{
+                    DataSetWriterId: _config.oi4.oi4Identifier,
                     Timestamp: new Date().toISOString(),
                     Status: 0,
                     Payload: {
@@ -48,10 +69,15 @@ module.exports.start = function (hostname, port) {
                         healthState: 0
                     }
                 }], "d8e7b6df-42ba-448a-975a-199f59e8ffeb"), {}, (err) => {
+                    // Set Timeout -> exiting process after five seconds
                     setTimeout(() => {
-                        process.kill(process.pid)
+                        console.log("[registeratoi4] Killing now")
+                        process.exit()
                     }, 5000)
                 })
+            }
+            else {
+                console.log("[registeratoi4] Already exiting")
             }
         }
         process.on('exit', exitHandler.bind());
@@ -60,9 +86,11 @@ module.exports.start = function (hostname, port) {
     })
 
     // Handle Messages
-    client.on('message', (topic, message) => {
-        console.log('Topic: ' + topic + ' Message: ' + message)
+    _client.on('message', (topic, message) => {
+        console.log('[registeratOI4] Topic: ' + topic + ' Message: ' + message)
         console.log()
+
+        // Set the CorrelationId as specified by the OI4
         let correlationId
         if (JSON.parse(message).CorrelationId !== "") {
             correlationId = JSON.parse(message).CorrelationId
@@ -73,7 +101,9 @@ module.exports.start = function (hostname, port) {
 
         if (topic.includes('get/mam')) // Handle Requests requesting the Master Asset Model
         {
-            client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/mam/' + oi4Identifier, buildmsg(buildmamMessage(), '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58', correlationId))
+            _client.publish('oi4/' + _config.oi4.DeviceClass 
+                            + '/' + _config.oi4.oi4Identifier 
+                            + '/pub/mam/' + _config.oi4.oi4Identifier, buildmsg(buildmamMessage(), '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58', correlationId))
         }
         else if (topic.includes("get/health")) // Handle Requests concerning the Health of the Application
         {
@@ -101,15 +131,16 @@ module.exports.start = function (hostname, port) {
         }
     })
 
-    client.on('error', (err) => {
+    // Handle mqtt connection errors
+    _client.on('error', (err) => {
         console.log(err)
     })
 }
 
 // This function publishes the health of the Device to the MQTT Broker, for example when requested by the Registry
 function pubHealth(correlationId = '') {
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/health/' + oi4Identifier, buildmsg([{
-        DataSetWriterId: oi4Identifier,
+    _client.publish('oi4/' + _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier + '/pub/health/' + _config.oi4.oi4Identifier, buildmsg([{
+        DataSetWriterId: _config.oi4.oi4Identifier,
         Timestamp: new Date().toISOString(),
         Status: 0,
         Payload: {
@@ -121,8 +152,8 @@ function pubHealth(correlationId = '') {
 
 // This function publishes the license to the MQTT Broker
 function pubLicense(correlationId = '') {
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/license/' + oi4Identifier, buildmsg([{
-        DataSetWriterId: oi4Identifier,
+    _client.publish('oi4/' + _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier + '/pub/license/' + _config.oi4.oi4Identifier, buildmsg([{
+        DataSetWriterId: _config.oi4.oi4Identifier,
         Timestamp: new Date().toISOString(),
         Payload: {
             licenses: [{
@@ -135,8 +166,8 @@ function pubLicense(correlationId = '') {
 
 // This function publishes the License Text to the MQTT Broker
 function pubLicenseText(correlationId = '') {
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/licenseText/GNULGPL', buildmsg([{
-        DataSetWriterId: oi4Identifier,
+    _client.publish('oi4/' + _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier + '/pub/licenseText/GNULGPL', buildmsg([{
+        DataSetWriterId: _config.oi4.oi4Identifier,
         Timestamp: new Date().toISOString(),
         Payload: {
             licText: "This library is free software; you can redistribute it and/or " +
@@ -157,8 +188,8 @@ function pubLicenseText(correlationId = '') {
 
 // This function publishes the config of the Device to the MQTT Broker, for example when it is requested by the Registry
 function pubConfig(correlationId = '') {
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/config/' + oi4Identifier, buildmsg([{
-        DataSetWriterId: oi4Identifier,
+    _client.publish('oi4/' + _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier + '/pub/config/' + _config.oi4.oi4Identifier, buildmsg([{
+        DataSetWriterId: _config.oi4.oi4Identifier,
         MetaDataVersion: {
             majorVersion: 0,
             minorVersion: 0
@@ -170,8 +201,8 @@ function pubConfig(correlationId = '') {
 
 // This function publishes the Profile of the Device to the MQTT Broker
 function pubProfile(correlationId = '') {
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/profile/' + oi4Identifier, buildmsg([{
-        DataSetWriterId: oi4Identifier,
+    _client.publish('oi4/' + _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier + '/pub/profile/' + _config.oi4.oi4Identifier, buildmsg([{
+        DataSetWriterId: _config.oi4.oi4Identifier,
         Timestamp: new Date().toISOString(),
         Status: 0,
         Payload: {
@@ -182,8 +213,8 @@ function pubProfile(correlationId = '') {
 
 // This function publishes the PublicationList to the MQTT Broker
 function pubPublicationList(correlationId = '') {
-    client.publish('oi4/' + DeviceClass + '/' + oi4Identifier + '/pub/publicationList', buildmsg([{
-        DataSetWriterId: oi4Identifier,
+    _client.publish('oi4/' + _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier + '/pub/publicationList', buildmsg([{
+        DataSetWriterId: _config.oi4.oi4Identifier,
         Timestamp: new Date().toISOString(),
         Payload: {
             publicationList: []
@@ -194,7 +225,7 @@ function pubPublicationList(correlationId = '') {
 // This function builds the mam Message, as specified by the OI4
 function buildmamMessage() {
     var mam = [{
-        DataSetWriterId: oi4Identifier,
+        DataSetWriterId: _config.oi4.oi4Identifier,
         Timestamp: new Date().toISOString(),
         Status: 0,
         Payload: {
@@ -205,20 +236,20 @@ function buildmamMessage() {
             ManufacturerUri: "urn:undefined.com",
             Model: {
                 Locale: "de-de",
-                Text: Model
+                Text: _config.oi4.Model
             },
-            ProductCode: Productcode,
+            ProductCode: _config.oi4.Productcode,
             HardwareRevision: "",
             SoftwareRevision: "0.0",
             DeviceRevision: "",
             DeviceManual: "Not available",
-            DeviceClass: DeviceClass,
-            ProductInstanceUri: oi4Identifier,
+            DeviceClass: _config.oi4.DeviceClass,
+            ProductInstanceUri: _config.oi4.oi4Identifier,
             RevisionCounter: 1,
-            SerialNumber: SerialNumber,
+            SerialNumber: _config.oi4.SerialNumber,
             Description: {
                 Locale: "de-de",
-                Text: Model
+                Text: _config.oi4.Model
             }
         }
     }]
@@ -230,9 +261,9 @@ module.exports.mam = buildmamMessage
 // This function builds a message, for publication at the MQTT Broker, it creates a wrapper around a given message
 function buildmsg(messages, DataSetClassId = '360ca8f3-5e66-42a2-8f10-9cdf45f4bf58', CorrelationId = '') {
     var msgWrapper = {
-        MessageId: Date.now().toString() + '-' + DeviceClass + '/' + oi4Identifier,
+        MessageId: Date.now().toString() + '-' + _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier,
         MessageType: 'ua-data',
-        PublisherId: DeviceClass + '/' + oi4Identifier,
+        PublisherId: _config.oi4.DeviceClass + '/' + _config.oi4.oi4Identifier,
         DataSetClassId: DataSetClassId,
         CorrelationId: CorrelationId,
         Messages: messages

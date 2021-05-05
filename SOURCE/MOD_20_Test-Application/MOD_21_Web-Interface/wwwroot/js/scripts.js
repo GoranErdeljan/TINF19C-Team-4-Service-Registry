@@ -1,5 +1,12 @@
-setInterval(getDNSSDEntries, 60000)
+/* Check out our GitHub: github.com/GoranErdeljan/TINF19C-Team-4-Service-Registry
+ * This File handles the updating of the table of DNS-SD entries on the webInterface of the DNS-SD Test-Application
+*/
+
+// Schedule updating and call once, when the file is loaded
+setInterval(getDNSSDEntries, 10000)
 getDNSSDEntries()
+
+// This function uses jquery to get current DNS-SD entries from the webserver and update the table accordingly
 function getDNSSDEntries() {
     $.get('/DNSSD/Entries', {}, function (data) {
         data = JSON.parse(data)
