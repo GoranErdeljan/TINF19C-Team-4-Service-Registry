@@ -1,5 +1,5 @@
 /* Check out our GitHub: github.com/GoranErdeljan/TINF19C-Team-4-Service-Registry
- * This File is the entrypoint of the DNS-SD to OI4-Service-Registry Interface
+ * This File handles new Devices on the OI4-MessageBus and answers dns-sd queries to announce these Devices
 */
 
 // Import mqtt and multicast-dns packages
