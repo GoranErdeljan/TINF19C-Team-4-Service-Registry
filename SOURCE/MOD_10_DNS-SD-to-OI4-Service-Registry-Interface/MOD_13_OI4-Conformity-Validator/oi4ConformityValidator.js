@@ -1,5 +1,5 @@
 /* Check out our GitHub: github.com/GoranErdeljan/TINF19C-Team-4-Service-Registry
- * This File offers functionality to chack whether TXT-Records are conform with the OI$-Specifications
+ * This file offers functionality to check whether TXT-Records are conform with the OI4-Specifications
 */
 
 // This variable stores the configuration
