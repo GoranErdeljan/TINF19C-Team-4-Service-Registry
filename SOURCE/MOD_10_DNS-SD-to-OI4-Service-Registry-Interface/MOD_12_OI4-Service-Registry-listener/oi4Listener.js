@@ -18,26 +18,15 @@ var _client
 // Configuration
 var _config = undefined
 
-// Validator
-var _validator = undefined
 
 // Use this function to set the configuration of the module
 module.exports.setConfig = function (config) {
     _config = config
 }
 
-// Use this function to set the validator the module uses
-module.exports.setValidator = function (validator) {
-    _validator = validator
-}
-
 // Use this function to start the module
 module.exports.start = (connectcb = () => { }) => {
-    // check whether validator and configuration have been set
-    if (typeof _validator === 'undefined') {
-        console.error("[oi4Listener] No Validator specified")
-        return
-    }
+    // check whether configuration has been set
     if (typeof _config === 'undefined') {
         console.error("[oi4Listener] No config specified")
         return
