@@ -73,7 +73,6 @@ addToRegistry.start(() => {
 if (config.announceOI4) {
     // Start the oi4Listener and give it a reference to the validator
     oi4Listener.setConfig(config)
-    oi4Listener.setValidator(validator)
     oi4Listener.start(() => {
     })
 }
