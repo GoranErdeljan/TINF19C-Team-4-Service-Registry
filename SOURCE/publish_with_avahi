@@ -1,2 +1,0 @@
-avahi-publish -s Test _http._tcp 2201 "oi4=true" "ProductInstanceUri=\"urn:undefined.com/Test/bla/undefined\"" "Manufacturer={\"Locale\":\"de-de\",\"Text\":\"TINF19C-Team4\"}" "ManufacturerUri=\"urn:undefined.com\"" "Model={\"Locale\":\"de-de\",\"Text\":\"DNS_SD_Test_Application\"}" "ProductCode=\"DNS_SD_TEST\"" "HardwareRevision=\"\"" "SoftwareRevision=\"0.0\"" "DeviceRevision=\"\"" "DeviceManual=\"Not available\"" "DeviceClass=\"Registry\"" "RevisionCounter=1" "SerialNumber=\"undefined\"" "Description={\"Locale\":\"de-de\",\"Text\":\"DNS_SD_Test_Application\"}"
-
